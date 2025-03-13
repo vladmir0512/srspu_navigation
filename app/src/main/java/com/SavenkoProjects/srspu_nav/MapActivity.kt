@@ -55,6 +55,7 @@ class MapActivity : AppCompatActivity() {
 
     private fun drawMapWithRoute(endRoomId: String) {
         try {
+
             // Читаем карту из assets
             val inputStream: InputStream = assets.open("lk_1.svg")
             val svg = SVG.getFromInputStream(inputStream)
@@ -77,8 +78,8 @@ class MapActivity : AppCompatActivity() {
                 Log.d("MapActivity", "Рисуем маршрут: startRoomId -> $endRoomId")
                 drawLineBetweenRooms(rotatedCanvas, startRoomId, endRoomId)
             } else {
-                Log.e("MapActivity", "Комната $endRoomId не найдена в JSON")
-                Toast.makeText(this, "Комната не найдена", Toast.LENGTH_SHORT).show()
+                Log.e("MapActivity", "Аудитория $endRoomId не найдена в JSON")
+                Toast.makeText(this, "Аудитория не найдена", Toast.LENGTH_SHORT).show()
             }
 
             mapImageView.setImageBitmap(rotatedBitmap)

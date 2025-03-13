@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
@@ -14,7 +13,6 @@ class MainActivity : AppCompatActivity() {
 
     private var btnScanQR: Button? = null
     private var tvResult: TextView? = null
-    private var roomNumberEditText: EditText? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,28 +28,30 @@ class MainActivity : AppCompatActivity() {
                   "building": {
                     "name": "ЛК (Лабораторный корпус)",
                     "doors": [
-                      { "id": "startRoomId", "x": 2000, "y": 2400 },
-                      { "id": "101", "x": 3050, "y": 1150 },
-                      { "id": "102", "x": 3100, "y": 2150 },
-                      { "id": "103", "x": 3150, "y": 3300 },
+                      { "id": "startRoomId", "x": 1950, "y": 2350 },
+                      { "id": "101", "x": 3200, "y": 1700 },
+                      { "id": "102", "x": 3100, "y": 1850 },
+                      { "id": "103", "x": 2950, "y": 2150 },
                       { "id": "104", "x": 2950, "y": 2150 },
-                      { "id": "105", "x": 3250, "y": 3500 },
-                      { "id": "106", "x": 3300, "y": 3600 },
-                      { "id": "107", "x": 3350, "y": 3150 },
-                      { "id": "108", "x": 3400, "y": 3150 },
-                      { "id": "109", "x": 3450, "y": 3150 },
-                      { "id": "110", "x": 3500, "y": 3150 },
-                      { "id": "111", "x": 3550, "y": 3150 },
-                      { "id": "112", "x": 3550, "y": 1200 },
-                      { "id": "113", "x": 3550, "y": 1250 },
-                      { "id": "114", "x": 3600, "y": 1250 },
-                      { "id": "115", "x": 3650, "y": 1250 },
-                      { "id": "116", "x": 3700, "y": 1250 },
-                      { "id": "117", "x": 3750, "y": 1250 },
-                      { "id": "118", "x": 3750, "y": 1200 },
-                      { "id": "119", "x": 3750, "y": 1150 },
-                      { "id": "120", "x": 3600, "y": 1150 },
-                      { "id": "121", "x": 3600, "y": 1200 }
+                      { "id": "105", "x": 1750, "y": 1850 },
+                      { "id": "106", "x": 1250, "y": 1850 },
+                      { "id": "107", "x": 950, "y": 1850 },
+                      { "id": "108", "x": 800, "y": 1850 },
+                      { "id": "109", "x": 500, "y": 1850 },
+                      { "id": "110", "x": 350, "y": 1850 },
+                      { "id": "111", "x": 200, "y": 1850 },
+                      { "id": "112", "x": 200, "y": 1700 },
+                      { "id": "113", "x": 350, "y": 1700 },
+                      { "id": "114", "x": 500, "y": 1700 },
+                      { "id": "115", "x": 800, "y": 1700 },
+                      { "id": "116", "x": 1280, "y": 1700 },
+                      { "id": "117", "x": 1450, "y": 1700 },
+                      { "id": "118", "x": 1570, "y": 1700 },
+                      { "id": "119", "x": 1750, "y": 1700 },
+                      { "id": "120", "x": 1880, "y": 1700 },
+                      { "id": "121", "x": 2290, "y": 1700 },
+                      { "id": "122", "x": 2450, "y": 1700 },
+                      { "id": "123", "x": 2750, "y": 1700 }
                     ]
                   }
                 }
@@ -77,19 +77,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showBuildingInfo(endRoomId: String) {
-        Log.d("MainActivity", "showBuildingInfo вызван с endRoomId: $endRoomId")
-        try {
-            val intent = Intent(this, MapActivity::class.java).apply {
-                putExtra("buildingJson", Gson().toJson(building))
-                putExtra("endRoomId", endRoomId)
-            }
-            startActivity(intent)
-        } catch (e: Exception) {
-            Log.e("MainActivity", "Ошибка при запуске MapActivity: ${e.message}", e)
-            tvResult?.text = "Ошибка при запуске MapActivity"
-        }
-    }
+//    private fun showBuildingInfo(endRoomId: String) {
+//        Log.d("MainActivity", "showBuildingInfo вызван с endRoomId: $endRoomId")
+//        try {
+//            val intent = Intent(this, MapActivity::class.java).apply {
+//                putExtra("buildingJson", Gson().toJson(building))
+//                putExtra("endRoomId", endRoomId)
+//            }
+//            startActivity(intent)
+//        } catch (e: Exception) {
+//            Log.e("MainActivity", "Ошибка при запуске MapActivity: ${e.message}", e)
+//            tvResult?.text = "Ошибка при запуске MapActivity"
+//        }
+//    }
 
     private fun parseJson(json: String): Building? {
         try {

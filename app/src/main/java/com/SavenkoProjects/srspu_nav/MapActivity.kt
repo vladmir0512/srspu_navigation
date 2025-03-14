@@ -44,8 +44,6 @@ class MapActivity : AppCompatActivity() {
                 Toast.makeText(this, "Введите номер аудитории", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            Log.d("MapActivity", "Ищем маршрут к аудитории $endRoomId")
             drawMapWithRoute(endRoomId)
         }
     }
@@ -56,7 +54,11 @@ class MapActivity : AppCompatActivity() {
             val svg = SVG.getFromInputStream(inputStream)
             val picture = svg.renderToPicture()
             val drawable = PictureDrawable(picture)
-            val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            val bitmap = Bitmap.createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            )
             val canvas = Canvas(bitmap)
             drawable.setBounds(0, 0, canvas.width, canvas.height)
             drawable.draw(canvas)
@@ -64,81 +66,64 @@ class MapActivity : AppCompatActivity() {
             val rotatedBitmap = rotateBitmap(bitmap, 90f)
             val rotatedCanvas = Canvas(rotatedBitmap)
 
-            val startRoomId = "startRoomId"
-            val startRoom = building?.building?.doors?.find { it.id.toString() == startRoomId }
-            val endRoom = building?.building?.doors?.find { it.id.toString() == endRoomId }
+            val floor = building?.building?.floors?.get(0)
+            if (floor == null) {
+                Toast.makeText(this, "Данные о этаже не найдены", Toast.LENGTH_SHORT).show()
+                return
+            }
 
-            if (startRoom == null || endRoom == null) {
-                Log.e("MapActivity", "Не найдены координаты одной из комнат: startRoomId=$startRoomId, endRoomId=$endRoomId")
+            val startValue = "startPosition"
+            val startPosition = floor.startPosition
+            val endRoom = floor.doors[endRoomId]
+
+            if (startPosition == null || endRoom == null) {
                 Toast.makeText(this, "Аудитория не найдена", Toast.LENGTH_SHORT).show()
                 return
             }
 
-            val path = findPath(startRoomId, endRoomId)
-            if (path.isNotEmpty()) {
-                drawPath(rotatedCanvas, path)
+            val pathIds = findPath(floor, startValue, endRoomId)
+            val pathPoints = pathIds.mapNotNull { getPoint(it, floor.doors, floor.hallways, floor.startPosition) }
+
+            if (pathPoints.isNotEmpty()) {
+                drawPath(rotatedCanvas, pathPoints)
                 mapImageView.setImageBitmap(rotatedBitmap)
             } else {
                 Toast.makeText(this, "Маршрут не найден", Toast.LENGTH_SHORT).show()
-                Log.d("MapActivity", "Маршрут не найден path: $path rotatedCanvas: $rotatedCanvas")
             }
         } catch (e: IOException) {
             Log.e("MapActivity", "Ошибка загрузки SVG", e)
         }
     }
 
-    private fun findPath(startRoomId: String, endRoomId: String): List<Point> {
-        val connections = building?.building?.connections ?: return emptyList()
-        val doors = building?.building?.doors ?: return emptyList()
-        val hallways = building?.building?.hallways ?: return emptyList()
-
-        val queue = mutableListOf<Pair<String, List<Point>>>()
-        val visited = mutableSetOf<String>()
-
-        val startPoint = getPoint(startRoomId, doors, hallways)
-        if (startPoint == Point(0, 0)) {
-            Log.e("MapActivity", "Начальная комната ($startRoomId) не найдена")
-            return emptyList()
-        }
-
-        queue.add(Pair(startRoomId, listOf(startPoint)))
-        visited.add(startRoomId)
-
-        Log.d("MapActivity", "Начало поиска маршрута. Очередь: ${queue.size}")
+    fun findPath(floor: Floor, start: String, target: String): List<String> {
+        val queue: MutableList<List<String>> = mutableListOf(listOf(start))
+        val visited: MutableSet<String> = mutableSetOf()
 
         while (queue.isNotEmpty()) {
-            val (currentId, currentPath) = queue.removeAt(0)
-            Log.d("MapActivity", "Проверяем: $currentId, Путь: ${currentPath.map { "(${it.x}, ${it.y})" }}")
+            val path = queue.removeAt(0)
+            val node = path.last()
 
-            if (currentId == endRoomId) {
-                Log.d("MapActivity", "Маршрут найден: ${currentPath.map { "(${it.x}, ${it.y})" }}")
-                return currentPath
-            }
+            if (node == target) return path
 
-            connections.filter { it.from == currentId }.forEach { connection ->
-                Log.d("MapActivity", "Проверяем соединение: ${connection.from} -> ${connection.to}")
-                if (!visited.contains(connection.to)) {
-                    visited.add(connection.to)
-                    val nextPoint = getPoint(connection.to, doors, hallways)
-                    queue.add(Pair(connection.to, currentPath + nextPoint))
-                    Log.d("MapActivity", "Добавляем в очередь: ${connection.to}, Путь: ${ (currentPath + nextPoint).map { "(${it.x}, ${it.y})" }}")
+            if (node !in visited) {
+                visited.add(node)
+                val neighbors = floor.connections[node] ?: emptyList()
+                for (neighbor in neighbors) {
+                    val newPath = path + neighbor
+                    queue.add(newPath)
                 }
             }
         }
-        Log.d("MapActivity", "Маршрут не найден")
         return emptyList()
     }
-    private fun getPoint(id: String, doors: List<Door>, hallways: List<Hallway>): Point {
-        doors.find { it.id.toString() == id }?.let {
-            Log.d("MapActivity", "Найдена дверь: $id (${it.x}, ${it.y})")
-            return Point(it.x, it.y)
+
+    private fun getPoint(id: String, doors: Map<String, Door>, hallways: Map<String, Hallway>, startPosition: List<Int>?): Point? {
+        return when {
+            id == "startPosition" && startPosition != null -> Point(startPosition[0], startPosition[1])
+            doors.containsKey(id) -> Point(doors[id]!!.position[0], doors[id]!!.position[1])
+            hallways.containsKey(id) -> Point(hallways[id]!!.path[0][0], hallways[id]!!.path[0][1])
+            else -> null
         }
-        hallways.find { it.id == id }?.let {
-            Log.d("MapActivity", "Найден коридор: $id (${it.x}, ${it.y})")
-            return Point(it.x, it.y)
-        }
-        Log.e("MapActivity", "Точка не найдена: $id")
-        return Point(0, 0)
     }
 
     private fun drawPath(canvas: Canvas, path: List<Point>) {

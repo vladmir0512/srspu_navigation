@@ -107,7 +107,7 @@ class MapActivity : AppCompatActivity() {
                 
                 // Находим соответствующую лестницу на первом этаже
                 val firstFloorStaircase = if (targetStaircase.contains("left")) "HSL" else "HSR"
-                
+
                 // Рисуем путь на первом этаже до лестницы
                 val firstFloorPathIds = findPath(firstFloor, startValue, firstFloorStaircase)
                 val firstFloorPathPoints = firstFloorPathIds.mapNotNull { 

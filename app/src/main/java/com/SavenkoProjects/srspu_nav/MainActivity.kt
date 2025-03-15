@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import java.io.IOException
 import java.io.InputStream
 
@@ -24,22 +25,18 @@ class MainActivity : AppCompatActivity() {
         tvResult = findViewById(R.id.tvResult)
 
         btnScanQR?.setOnClickListener {
-            Log.d("MainActivity", "Кнопка 'Найти' нажата")
             val json = loadJSONFromAsset("building_data.json")
 
             if (json != null) {
                 try {
-                    building = parseJson(json)
+                    val building = parseJson(json)
                     if (building != null) {
-                        val buildingJson = Gson().toJson(building)
-                        Log.d("MainActivity", "Передаем JSON в MapActivity: $buildingJson")
-
                         val intent = Intent(this, MapActivity::class.java).apply {
-                            putExtra("buildingJson", buildingJson)
+                            putExtra("buildingJson", Gson().toJson(building))
                         }
                         startActivity(intent)
                     } else {
-                        tvResult?.text = "Ошибка парсинга JSON"
+                        tvResult?.text = "Ошибка парсинга JSON или неполные данные"
                     }
                 } catch (e: Exception) {
                     Log.e("MainActivity", "Ошибка: ${e.message}", e)
@@ -54,11 +51,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadJSONFromAsset(fileName: String): String? {
         return try {
             val inputStream: InputStream = assets.open(fileName)
-            val size: Int = inputStream.available()
-            val buffer = ByteArray(size)
-            inputStream.read(buffer)
-            inputStream.close()
-            String(buffer, Charsets.UTF_8)
+            inputStream.bufferedReader().use { it.readText() }
         } catch (ex: IOException) {
             Log.e("MainActivity", "Ошибка загрузки JSON файла: ${ex.message}", ex)
             null
@@ -66,21 +59,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun parseJson(json: String): Building? {
-        try {
+        return try {
             val gson = Gson()
-            val building = gson.fromJson(json, Building::class.java)
-            Log.d("MainActivity", "Parsed building: $building")
-            return building
+            val type = object : TypeToken<Building>() {}.type
+            gson.fromJson(json, type)
         } catch (e: JsonSyntaxException) {
             Log.e("MainActivity", "Ошибка парсинга JSON: ${e.message}", e)
-            return null
+            null
         } catch (e: Exception) {
             Log.e("MainActivity", "Непредвиденная ошибка при парсинге JSON: ${e.message}", e)
-            return null
+            null
         }
-    }
-
-    companion object {
-        var building: Building? = null
     }
 }

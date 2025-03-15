@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SRSPU_NAVIGATION</string>
+    <string name="map_image_description">Изображение карты</string>
+    <string name="floor_map_description">Изображение карты этажа</string>
 </resources>

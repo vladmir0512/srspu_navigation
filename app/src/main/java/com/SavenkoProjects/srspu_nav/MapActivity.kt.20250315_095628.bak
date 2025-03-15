@@ -106,7 +106,7 @@ class MapActivity : AppCompatActivity() {
                 val targetStaircase = findNearestStaircase(endRoom.position[0], targetFloor)
                 
                 // Находим соответствующую лестницу на первом этаже
-                val firstFloorStaircase = if (targetStaircase.contains("left")) "HSL" else "HSR"
+                val firstFloorStaircase = if (targetStaircase == "HSL") "HSL" else "HSR"
                 
                 // Рисуем путь на первом этаже до лестницы
                 val firstFloorPathIds = findPath(firstFloor, startValue, firstFloorStaircase)
@@ -155,71 +155,24 @@ class MapActivity : AppCompatActivity() {
     }
 
     fun findPath(floor: Floor, start: String, target: String): List<String> {
-        Log.d("MapActivity", "Поиск пути на этаже ${floor.id} от $start до $target")
-        
-        // Проверяем, существуют ли начальная и конечная точки в данных
-        val startExists = floor.connections.containsKey(start) || 
-                         floor.doors.containsKey(start) || 
-                         floor.hallways.containsKey(start) || 
-                         start == "startPosition"
-                         
-        val targetExists = floor.connections.containsKey(target) || 
-                          floor.doors.containsKey(target) || 
-                          floor.hallways.containsKey(target)
-        
-        Log.d("MapActivity", "Начальная точка '$start' существует: $startExists")
-        Log.d("MapActivity", "Конечная точка '$target' существует: $targetExists")
-        
-        // Если начальная точка не существует, но это верхний этаж, пробуем использовать основной узел этажа
-        if (!startExists && floor.id > 1) {
-            val floorMainNode = "H${floor.id}"
-            if (floor.connections.containsKey(floorMainNode) || floor.hallways.containsKey(floorMainNode)) {
-                Log.d("MapActivity", "Заменяем начальную точку '$start' на основной узел этажа '$floorMainNode'")
-                return findPath(floor, floorMainNode, target)
-            }
-        }
-        
-        if (!startExists || !targetExists) {
-            Log.e("MapActivity", "Начальная или конечная точка не существует в данных этажа ${floor.id}")
-            return emptyList()
-        }
-        
         val queue: MutableList<List<String>> = mutableListOf(listOf(start))
         val visited: MutableSet<String> = mutableSetOf()
 
-        var iterations = 0
-        val maxIterations = 1000 // Защита от бесконечного цикла
-
-        while (queue.isNotEmpty() && iterations < maxIterations) {
-            iterations++
+        while (queue.isNotEmpty()) {
             val path = queue.removeAt(0)
             val node = path.last()
 
-            if (node == target) {
-                Log.d("MapActivity", "Путь найден за $iterations итераций: $path")
-                return path
-            }
+            if (node == target) return path
 
             if (node !in visited) {
                 visited.add(node)
                 val neighbors = floor.connections[node] ?: emptyList()
-                Log.d("MapActivity", "Узел: $node, соседи: $neighbors")
-                
                 for (neighbor in neighbors) {
-                    if (neighbor !in visited) {
-                        val newPath = path + neighbor
-                        queue.add(newPath)
-                    }
+                    val newPath = path + neighbor
+                    queue.add(newPath)
                 }
             }
         }
-        
-        if (iterations >= maxIterations) {
-            Log.e("MapActivity", "Превышено максимальное количество итераций при поиске пути")
-        } else {
-            Log.e("MapActivity", "Путь не найден. Посещено ${visited.size} узлов")
-        }
-        
         return emptyList()
     }
 
@@ -256,59 +209,22 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun findNearestStaircase(x: Int, floor: Floor): String {
-        // Определяем идентификаторы лестниц в зависимости от этажа
-        val (leftStaircaseId, rightStaircaseId) = when (floor.id) {
-            2 -> Pair("stairs_left_lk2", "stairs_right_lk2")
-            else -> Pair("HSL", "HSR")
-        }
-
         // Получаем координаты лестниц из данных этажа
-        val leftStaircase = floor.hallways[leftStaircaseId]?.path?.get(0)
-        val rightStaircase = floor.hallways[rightStaircaseId]?.path?.get(0)
-        Log.d("MapActivity", "Поиск ближайшей лестницы для x=$x")
-        Log.d("MapActivity", "Левая лестница: $leftStaircase")
-        Log.d("MapActivity", "Правая лестница: $rightStaircase")
-        if (leftStaircase == null && rightStaircase == null) {
-            Log.e("MapActivity", "Ни одна лестница не найдена на этаже ${floor.id}")
-            // Проверяем все ключи в hallways, чтобы найти возможные лестницы
-            val possibleStairs = floor.hallways.keys.filter {
-                it.contains("stairs") || it.contains("STAIR") || it.contains("stair")
-            }
-            Log.d("MapActivity", "Возможные лестницы на этаже: $possibleStairs")
+        val leftStaircase = floor.hallways["HSL"]?.path?.get(0)
+        val rightStaircase = floor.hallways["HSR"]?.path?.get(0)
 
-            // Если это верхний этаж, используем основной узел этажа
-            if (floor.id > 1) {
-                val floorMainNode = "H${floor.id}"
-                Log.d("MapActivity", "Используем основной узел верхнего этажа: $floorMainNode")
-                return floorMainNode
-            }
-
-            return possibleStairs.firstOrNull() ?: "H${floor.id}"
+        if (leftStaircase == null || rightStaircase == null) {
+            return "H1" // Возвращаем начальную позицию, если данные о лестницах отсутствуют
         }
 
-        // Если одна из лестниц отсутствует, возвращаем ту, что существует
-        if (leftStaircase == null) {
-            Log.d("MapActivity", "Левая лестница отсутствует, используем правую")
-            return rightStaircaseId
-        }
-        if (rightStaircase == null) {
-            Log.d("MapActivity", "Правая лестница отсутствует, используем левую")
-            return leftStaircaseId
-        }
         // Определяем ближайшую лестницу
-        val leftDistance = Math.abs(x - leftStaircase[0])
-        val rightDistance = Math.abs(x - rightStaircase[0])
-        Log.d("MapActivity", "Расстояние до левой лестницы: $leftDistance")
-        Log.d("MapActivity", "Расстояние до правой лестницы: $rightDistance")
-
-        return if (leftDistance < rightDistance) {
-            Log.d("MapActivity", "Выбрана левая лестница $leftStaircaseId")
-            leftStaircaseId
+        return if (Math.abs(x - leftStaircase[0]) < Math.abs(x - rightStaircase[0])) {
+            "HSL"
         } else {
-            Log.d("MapActivity", "Выбрана правая лестница $rightStaircaseId")
-            rightStaircaseId
+            "HSR"
         }
     }
+    
     private fun drawHigherFloorRoute(floorNumber: Int, staircase: String, endRoomId: String) {
         try {
             // Загружаем SVG карту соответствующего этажа
@@ -319,7 +235,6 @@ class MapActivity : AppCompatActivity() {
                 else -> return
             }
             
-            Log.d("MapActivity", "Загрузка SVG карты для этажа $floorNumber: $svgFileName")
             val inputStream: InputStream = assets.open(svgFileName)
             val svg = SVG.getFromInputStream(inputStream)
             val picture = svg.renderToPicture()
@@ -339,61 +254,15 @@ class MapActivity : AppCompatActivity() {
             // Получаем данные этажа
             val floor = building?.building?.floors?.find { it.id == floorNumber }
             if (floor == null) {
-                Toast.makeText(this, "Данные о этаже $floorNumber не найдены", Toast.LENGTH_SHORT).show()
-                Log.e("MapActivity", "Данные о этаже $floorNumber не найдены в объекте building")
-                return
-            }
-            
-            // Используем основной узел этажа вместо лестницы, если лестница не найдена
-            // Например, H2 для 2 этажа, H3 для 3 этажа и т.д.
-            val floorMainNode = "H$floorNumber"
-            val startNode = if (floor.connections.containsKey(staircase)) {
-                staircase
-            } else {
-                Log.d("MapActivity", "Лестница $staircase не найдена на этаже $floorNumber, используем $floorMainNode")
-                floorMainNode
-            }
-            
-            // Логируем данные о лестницах и соединениях для отладки
-            Log.d("MapActivity", "Начальный узел для маршрута на этаже $floorNumber: $startNode")
-            Log.d("MapActivity", "Целевая аудитория: $endRoomId")
-            Log.d("MapActivity", "Доступные соединения для начального узла: ${floor.connections[startNode]}")
-            Log.d("MapActivity", "Аудитория существует: ${floor.doors.containsKey(endRoomId)}")
-            Log.d("MapActivity", "Все узлы на этаже: ${floor.hallways.keys}")
-            
-            // Проверяем наличие аудитории в данных этажа
-            if (!floor.doors.containsKey(endRoomId)) {
-                Toast.makeText(this, "Аудитория $endRoomId не найдена на этаже $floorNumber", Toast.LENGTH_SHORT).show()
-                Log.e("MapActivity", "Аудитория $endRoomId отсутствует в данных этажа $floorNumber")
+                Toast.makeText(this, "Данные о этаже не найдены", Toast.LENGTH_SHORT).show()
                 return
             }
 
-            // Проверяем существование начального узла
-            if (!floor.connections.containsKey(startNode) && !floor.hallways.containsKey(startNode)) {
-                Log.e("MapActivity", "Начальный узел $startNode не существует на этаже $floorNumber")
-                Log.d("MapActivity", "Доступные узлы в connections: ${floor.connections.keys}")
-                Log.d("MapActivity", "Доступные узлы в hallways: ${floor.hallways.keys}")
-                
-                // Пробуем найти любой доступный узел в качестве начальной точки
-                val alternativeStartNode = floor.connections.keys.firstOrNull() ?: 
-                                          floor.hallways.keys.firstOrNull() ?: "startPosition"
-                
-                Log.d("MapActivity", "Используем альтернативный узел: $alternativeStartNode")
-                if (alternativeStartNode != startNode) {
-                    // Рекурсивно вызываем эту же функцию с новым начальным узлом
-                    drawHigherFloorRoute(floorNumber, alternativeStartNode, endRoomId)
-                    return
-                }
-            }
-
-            // Рисуем путь от начального узла до аудитории
-            val pathIds = findPath(floor, startNode, endRoomId)
-            Log.d("MapActivity", "Найденный путь: $pathIds")
-            
+            // Рисуем путь от лестницы до аудитории
+            val pathIds = findPath(floor, staircase, endRoomId)
             val pathPoints = pathIds.mapNotNull { 
                 getPoint(it, floor.doors, floor.hallways, floor.startPosition) 
             }
-            Log.d("MapActivity", "Точки пути: $pathPoints")
 
             if (pathPoints.isNotEmpty()) {
                 drawPath(rotatedCanvas, pathPoints)
@@ -403,42 +272,9 @@ class MapActivity : AppCompatActivity() {
                 // Показываем маршрут первого этажа в маленьком ImageView
                 val firstFloorImageView = findViewById<ImageView>(R.id.floorMapImageView)
                 firstFloorImageView.visibility = View.VISIBLE
-                Log.d("MapActivity", "Маршрут успешно отображен на этаже $floorNumber")
             } else {
-                Log.e("MapActivity", "Не удалось найти маршрут на этаже $floorNumber от $startNode до $endRoomId")
-                Log.e("MapActivity", "Данные соединений для начального узла: ${floor.connections[startNode]}")
-                Log.e("MapActivity", "Все соединения на этаже: ${floor.connections}")
-                
-                // Проверяем, есть ли прямой путь от H к аудитории
-                val directPathIds = floor.connections[floorMainNode]?.filter { it == endRoomId || it.contains(endRoomId) }
-                if (!directPathIds.isNullOrEmpty()) {
-                    Log.d("MapActivity", "Найден прямой путь от $floorMainNode к $endRoomId через ${directPathIds.first()}")
-                    
-                    // Рисуем прямой путь
-                    val directPathPoints = listOf(
-                        getPoint(floorMainNode, floor.doors, floor.hallways, floor.startPosition),
-                        getPoint(directPathIds.first(), floor.doors, floor.hallways, floor.startPosition),
-                        getPoint(endRoomId, floor.doors, floor.hallways, floor.startPosition)
-                    ).filterNotNull()
-                    
-                    if (directPathPoints.isNotEmpty()) {
-                        drawPath(rotatedCanvas, directPathPoints)
-                        mapImageView.setImageBitmap(rotatedBitmap)
-                        return
-                    }
-                }
-                
-                Toast.makeText(this, "Маршрут на ${floorNumber} этаже не найден. Проверьте данные соединений.", Toast.LENGTH_LONG).show()
-                
-                // Продолжаем использовать SVG, но без маршрута
-                mapImageView.setImageBitmap(rotatedBitmap)
-            }
-        } catch (e: IOException) {
-            Log.e("MapActivity", "Ошибка загрузки SVG для этажа $floorNumber", e)
-            Toast.makeText(this, "Ошибка загрузки карты этажа $floorNumber: ${e.message}", Toast.LENGTH_LONG).show()
-            
-            try {
-                // Пробуем загрузить PNG карту как запасной вариант
+                Toast.makeText(this, "Маршрут на ${floorNumber} этаже не найден", Toast.LENGTH_SHORT).show()
+                // Показываем стандартную карту без маршрута
                 val mapResId = when (floorNumber) {
                     2 -> R.drawable.lk_floor2_map
                     3 -> R.drawable.lk_floor3_map
@@ -446,10 +282,17 @@ class MapActivity : AppCompatActivity() {
                     else -> return
                 }
                 mapImageView.setImageResource(mapResId)
-                Log.d("MapActivity", "Загружена PNG карта для этажа $floorNumber как запасной вариант")
-            } catch (e2: Exception) {
-                Log.e("MapActivity", "Не удалось загрузить даже PNG карту", e2)
             }
+        } catch (e: IOException) {
+            Log.e("MapActivity", "Ошибка загрузки SVG для этажа $floorNumber", e)
+            // В случае ошибки показываем стандартную карту
+            val mapResId = when (floorNumber) {
+                2 -> R.drawable.lk_floor2_map
+                3 -> R.drawable.lk_floor3_map
+                4 -> R.drawable.lk_floor4_map
+                else -> return
+            }
+            mapImageView.setImageResource(mapResId)
         }
     }
 

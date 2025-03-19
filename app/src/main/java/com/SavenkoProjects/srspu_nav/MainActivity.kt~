@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
             if (json != null) {
                 try {
                     val building = parseJson(json)
-                    Log.d("building", building.toString())
+                    Log.d(building.toString(), "building")
                     if (building != null) {
                         val intent = Intent(this, MapActivity::class.java).apply {
                             putExtra("buildingJson", Gson().toJson(building))

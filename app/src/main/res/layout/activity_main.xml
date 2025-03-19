@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:id="@+id/mainLayout"
+    android:padding="16dp"
+    tools:context=".MainActivity">
 
-    <!-- Кнопка для сканирования QR-кода -->
     <Button
         android:id="@+id/btnScanQR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Сканировать" />
 
-    <!-- Место для отображения результата сканирования -->
     <TextView
         android:id="@+id/tvResult"
         android:layout_width="wrap_content"
@@ -22,6 +22,7 @@
     <ImageView
         android:id="@+id/mapImageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="TODO" />
 
 </LinearLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JsonSchemaMappingsProjectConfiguration">
+    <state>
+      <map>
+        <entry key="Doki Jetbrains Templates">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="Doki Jetbrains Templates" />
+              <option name="relativePathToSchema" value="jar://$APPLICATION_PLUGINS_DIR$/doki-theme-jetbrains/lib/instrumented-doki-theme-jetbrains-88.5-1.14.1.jar!/theme-schema/jetbrains.theme.schema.json" />
+              <option name="applicationDefined" value="true" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="app/src/main/assets/building_data.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+      </map>
+    </state>
+  </component>
+</project>

@@ -1,10 +1,8 @@
 package com.SavenkoProjects.srspu_nav
 
-import android.icu.text.Transliterator.Position
-
 //ExtraData.kt
 data class Building(
-    val building: BuildingData
+    val building: List<BuildingData>
 )
 
 data class BuildingData(
@@ -28,3 +26,9 @@ data class Door(
 data class Hallway(
     val path: List<List<Int>>
 )
+data class JSONData(
+    val currentBuilding: BuildingData,
+    val currentFloor: Floor,
+    val firstFloor: Floor,
+    val currentRoom: Door
+    )

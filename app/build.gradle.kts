@@ -34,6 +34,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -44,12 +47,14 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
-    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation("com.github.bumptech.glide:glide:4.15.1")
-    implementation("com.caverock:androidsvg-aar:1.4")
-    implementation("com.google.code.gson:gson:2.12.1")
+    implementation(libs.zxing.android.embedded)
+    implementation(libs.glide)
+    implementation(libs.androidsvg.aar)
+    implementation(libs.gson)
+    implementation(libs.moshi)
     implementation(libs.androidx.ui.graphics.android)
-//    implementation("com.caverock:androidsvg-constraintlayout:1.2.1")
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

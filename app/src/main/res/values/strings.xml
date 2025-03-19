@@ -2,4 +2,9 @@
     <string name="app_name">SRSPU_NAVIGATION</string>
     <string name="map_image_description">Изображение карты</string>
     <string name="floor_map_description">Изображение карты этажа</string>
+    <string name="building_data_file_name">building_data.json</string>
+    <string name="error_json_parsing">Ошибка парсинга JSON или неполные данные</string>
+    <string name="error_json_loading">Ошибка загрузки JSON файла</string>
+    <string name="error_text">Ошибка.</string>
+
 </resources>

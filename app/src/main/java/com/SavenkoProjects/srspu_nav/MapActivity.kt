@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.caverock.androidsvg.SVG
 import com.google.gson.Gson
 import java.io.IOException
-import java.io.InputStream
 
 class MapActivity : AppCompatActivity() {
     private var building: Building? = null
@@ -138,7 +137,7 @@ class MapActivity : AppCompatActivity() {
             rightStaircaseId
         }
     }
-    fun findPath(floor: Floor, start: String, target: String): List<String> {
+    private fun findPath(floor: Floor, start: String, target: String): List<String> {
         Log.d("MapActivity", "Поиск пути на этаже ${floor.id} от $start до $target")
 
         // Проверяем, существуют ли начальная и конечная точки в данных
@@ -206,11 +205,47 @@ class MapActivity : AppCompatActivity() {
 
         return emptyList()
     }
+
+
     private fun drawMapWithRoute(endRoomId: String) {
         try {
-            val currentBuilding = building?.building?.first() ?: return
-            val firstFloor = currentBuilding.floors.find { it.id == 1 } ?: return
+            // Ностройки и инициализация
+            val buildingId = 0
+            /*
+            buildingId получаем из QR-кода, например:
+              -0: lk,
+              -1: gl_front,
+              -2: gl_back,
+              -3: rt,
+              -4: nrg,
+              -5: ubk,
+              -6: gg,
+              -7: him
+           */
+            val buildingsDict = mapOf(
+                1 to "lk",
+                2 to "gl_front",
+                3 to "gl_back",
+                4 to "rt",
+                5 to "nrg",
+                6 to "ubk",
+                7 to "gg",
+                8 to "him"
+            )
+            val someBuilding = building?.building
+            val buildingTag = buildingsDict[buildingId + 1]
 
+
+            Log.d("MapActivity", "Выбрано здание $buildingTag")
+
+
+            //-----------------------------Получаем здание по id---------------------------------
+            val currentBuilding = someBuilding?.get(buildingId) ?: return
+
+            val currentBuildingName = currentBuilding.name
+            Toast.makeText(this, "Здание $currentBuildingName выбрано", Toast.LENGTH_SHORT).show()
+
+            val firstFloor = currentBuilding.floors.find { it.id == 1 } ?: return
             val floorNumber = endRoomId.firstOrNull()?.digitToIntOrNull()
             if (floorNumber == null) {
                 Toast.makeText(this, "Некорректный номер аудитории", Toast.LENGTH_SHORT).show()
@@ -219,7 +254,7 @@ class MapActivity : AppCompatActivity() {
             }
             val isHigherFloor = floorNumber > 1
 
-            val firstFloorBitmap = loadSvgBitmap("lk_1.svg") ?: return
+            val firstFloorBitmap = loadSvgBitmap("${buildingTag}_1.svg") ?: return
             val firstFloorCanvas = Canvas(firstFloorBitmap)
 
             if (isHigherFloor) {
@@ -238,7 +273,13 @@ class MapActivity : AppCompatActivity() {
                     drawPath(firstFloorCanvas, firstFloorPathPoints)
                     floorMapImageView.setImageBitmap(firstFloorBitmap)
                     floorMapImageView.visibility = View.VISIBLE
-                    drawHigherFloorRoute(targetFloor, targetStaircase, endRoomId)
+                    if (buildingTag != null) {
+                        drawHigherFloorRoute(buildingTag, targetFloor, targetStaircase, endRoomId)
+                    }
+                    else {
+                        Toast.makeText(this, "Маршрут на первом этаже не найден", Toast.LENGTH_SHORT).show()
+                        Log.d("MapActivity", "buildingTag не найден")
+                    }
                 } else {
                     Toast.makeText(this, "Маршрут на первом этаже не найден", Toast.LENGTH_SHORT).show()
                 }
@@ -275,9 +316,9 @@ class MapActivity : AppCompatActivity() {
         }
         canvas.drawPath(androidPath, paint)
     }
-    private fun drawHigherFloorRoute(floor: Floor, staircase: String, endRoomId: String) {
+    private fun drawHigherFloorRoute(buildingTag: String, floor: Floor, staircase: String, endRoomId: String) {
         try {
-            val svgFileName = "lk_${floor.id}.svg"
+            val svgFileName = "${buildingTag}_${floor.id}.svg"
             val floorBitmap = loadSvgBitmap(svgFileName) ?: return
             val floorCanvas = Canvas(floorBitmap)
 
@@ -312,7 +353,6 @@ class MapActivity : AppCompatActivity() {
             Log.e("MapActivity", "Ошибка загрузки карты этажа", e)
         }
     }
-
     private fun loadSvgBitmap(svgFileName: String): Bitmap? {
         return try {
             assets.open(svgFileName).use { inputStream ->

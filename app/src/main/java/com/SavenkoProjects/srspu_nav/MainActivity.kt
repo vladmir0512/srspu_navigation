@@ -16,13 +16,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val json = loadJSONFromAsset("building_data.json")
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.mainLayout)
 
         binding.btnScanQR.setOnClickListener {
-            val json = loadJSONFromAsset("building_data.json")
-
             if (json != null) {
                 try {
                     val building = parseJson(json)

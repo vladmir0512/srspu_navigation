@@ -18,6 +18,8 @@ uiGraphicsAndroid = "1.7.8"
 roomCommon = "2.6.1"
 roomKtx = "2.6.1"
 zxingAndroidEmbedded = "4.3.0"
+foundationLayoutAndroid = "1.7.8"
+foundationAndroid = "1.7.8"
 
 [libraries]
 androidsvg-aar = { module = "com.caverock:androidsvg-aar", version.ref = "androidsvgAar" }
@@ -37,6 +39,8 @@ androidx-room-common = { group = "androidx.room", name = "room-common", version.
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
+androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

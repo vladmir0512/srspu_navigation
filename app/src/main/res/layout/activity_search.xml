@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/figma_background"
+    android:id="@+id/activity_search"
+    tools:context=".SearchActivity">
+
+    <!-- Иллюстрация -->
+
+    <!-- Поле ввода -->
+
+
+    <FrameLayout
+        android:id="@+id/illustration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/brain"
+        tools:ignore="MissingConstraints">
+        <!-- Кнопка "Найти" -->
+
+        <EditText
+            android:id="@+id/editTextSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="23dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="165dp"
+            android:hint="№ АУДИТОРИИ"
+            android:paddingStart="50dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/search"
+            android:textColorHint="@android:color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="133dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="68dp"
+            android:background="@drawable/btn_new"
+            android:fontFamily="sans-serif-medium"
+            android:text="Найти"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </FrameLayout>
+
+
+
+    <!-- Кнопка "Карта маршрута между корпусами" -->
+    <Button
+        android:id="@+id/mapButton"
+        android:layout_width="286dp"
+        android:layout_height="69dp"
+        android:layout_marginBottom="60dp"
+        android:background="@color/figma_purple"
+        android:fontFamily="sans-serif-medium"
+        android:text="КАРТА МАРШРУТА МЕЖДУ КОРПУСАМИ"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/illustration"
+        app:layout_constraintVertical_bias="1.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

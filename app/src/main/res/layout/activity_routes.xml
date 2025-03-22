@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/figma_background"
+    tools:context=".RoutesActivity">
+
+    <FrameLayout
+        android:id="@+id/illustrationRoutes"
+        android:layout_width="411dp"
+        android:layout_height="414dp"
+        android:layout_marginTop="340dp"
+        android:background="@drawable/college_class_bro"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/mapImageViewBack"
+        android:layout_width="281dp"
+        android:layout_height="274dp"
+        android:contentDescription="Первый этаж"
+        android:visibility="visible"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/mapImageViewBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/floorMapImageViewBack" />
+
+    <ImageView
+        android:id="@+id/mapImageView"
+        android:layout_width="265dp"
+        android:layout_height="257dp"
+        android:contentDescription="Первый этаж"
+        android:visibility="visible"
+        android:background="@drawable/college_class_bro"
+
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/mapImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/floorMapImageView" />
+    <ImageView
+        android:id="@+id/floorMapImageViewBack"
+        android:layout_width="358dp"
+        android:layout_height="340dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/floor_map_description"
+        android:visibility="visible"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintVertical_bias="0.179" />
+    <ImageView
+        android:id="@+id/floorMapImageView"
+        android:layout_width="338dp"
+        android:layout_height="320dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/college_class_bro"
+        android:layout_gravity="center"
+        android:contentDescription="@string/floor_map_description"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintVertical_bias="0.179" />
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="top"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="270dp"
+        android:background="@drawable/searchmin"
+        android:fontFamily="sans-serif-medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.038" />
+</androidx.constraintlayout.widget.ConstraintLayout>

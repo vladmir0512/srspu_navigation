@@ -68,9 +68,9 @@ class MapActivity : AppCompatActivity() {
                 }
             }
 
-            drawMapWithRoute(endRoomId)
         }
     }
+
     private fun getPoint(id: String, doors: Map<String, Door>, hallways: Map<String, Hallway>, startPosition: List<Int>?): Point? {
         return when {
             id == "startPosition" && startPosition != null -> Point(startPosition[0], startPosition[1])
@@ -206,11 +206,10 @@ class MapActivity : AppCompatActivity() {
         return emptyList()
     }
 
-
     private fun drawMapWithRoute(endRoomId: String) {
         try {
             // Ностройки и инициализация
-            val buildingId = 0
+            val buildingId = 1
             /*
             buildingId получаем из QR-кода, например:
               -0: lk,

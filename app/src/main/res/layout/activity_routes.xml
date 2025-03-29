@@ -8,29 +8,33 @@
     android:background="@color/figma_background"
     tools:context=".RoutesActivity">
 
-    <FrameLayout
+    <ImageView
         android:id="@+id/illustrationRoutes"
-        android:layout_width="411dp"
-        android:layout_height="414dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="340dp"
-        android:background="@drawable/college_class_bro"
+        android:contentDescription="@string/activity_background"
+        android:scaleType="centerCrop"
+        android:src="@drawable/college_class_bro"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.481">
 
 
-
-    </FrameLayout>
+    </ImageView>
 
     <ImageView
         android:id="@+id/mapImageViewBack"
-        android:layout_width="281dp"
-        android:layout_height="274dp"
-        android:contentDescription="Первый этаж"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginHorizontal="80dp"
+        android:contentDescription="@string/description_image_background_first_floor"
         android:visibility="visible"
         android:layout_marginBottom="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="14dp"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/mapImageViewBack"
@@ -40,11 +44,10 @@
 
     <ImageView
         android:id="@+id/mapImageView"
-        android:layout_width="265dp"
-        android:layout_height="257dp"
-        android:contentDescription="Первый этаж"
+        android:layout_width="165dp"
+        android:layout_height="140dp"
+        android:contentDescription="@string/image_description_first_floor"
         android:visibility="visible"
-        android:background="@drawable/college_class_bro"
 
         android:layout_marginBottom="30dp"
         android:layout_marginTop="48dp"
@@ -53,28 +56,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/floorMapImageView" />
+
     <ImageView
         android:id="@+id/floorMapImageViewBack"
-        android:layout_width="358dp"
-        android:layout_height="340dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="375dp"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="100dp"
+        android:background="@color/white"
         android:contentDescription="@string/floor_map_description"
         android:visibility="visible"
-        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="100dp"
         app:layout_constraintVertical_bias="0.179" />
     <ImageView
         android:id="@+id/floorMapImageView"
-        android:layout_width="338dp"
-        android:layout_height="320dp"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/college_class_bro"
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        android:layout_marginTop="40dp"
         android:layout_gravity="center"
+        android:layout_marginHorizontal="5dp"
         android:contentDescription="@string/floor_map_description"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -84,19 +88,50 @@
         android:layout_marginBottom="100dp"
         app:layout_constraintVertical_bias="0.179" />
 
-    <Button
-        android:id="@+id/searchButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="top"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="270dp"
-        android:background="@drawable/searchmin"
-        android:fontFamily="sans-serif-medium"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/floorMapImageViewBack"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.038" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/searchButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:layout_marginStart="25dp"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/searchmin"
+            android:contentDescription="@string/search_button_to_animate_edittext"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.038" />
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autofillHints=""
+            android:background="@drawable/search_alt"
+            android:hint="@string/hint_edit_value"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="30dp"
+            android:inputType="text"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:visibility="gone"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/floorMapImageViewBack"
+            tools:hint="1212121313135153154564165465456465465465431"
+            />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

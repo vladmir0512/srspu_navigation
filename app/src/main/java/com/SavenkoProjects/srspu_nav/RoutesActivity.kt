@@ -26,6 +26,7 @@ import com.caverock.androidsvg.SVG
 class RoutesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRoutesBinding
+    private var isSearchVisible = false  // Флаг видимости
 
     override fun onCreate(savedInstanceState: Bundle?) {
         var building: Building? = null
@@ -35,21 +36,42 @@ class RoutesActivity : AppCompatActivity() {
         val json = loadJSONFromAsset().toString()
         binding = ActivityRoutesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val buildingId = intent.getStringExtra ("buildingId")?.toInt()
+
+        //---------------Получаем данные из Intent от SearchActivity---------------
+        val buildingId = 1
         val searchText = intent.getStringExtra("searchText").toString()
         building = parseJson(json)
-
-            Log.d("RoutesActivity", "searchText: $searchText")
-            Log.d("RoutesActivity", "json: $json")
-            Log.d("RoutesActivity", "building: $building")
-            if (building != null && buildingId != null) {
+        Log.d("RoutesActivity", "searchText: $searchText")
+        Log.d("RoutesActivity", "building: $building")
+        if (building != null && buildingId != null) {
                 drawMapWithRoute(
                     buildingId = buildingId,
                     building = building,
                     endRoomId = searchText
                 )
-            }
         }
+
+        binding.searchButton.setOnClickListener{
+            toggleSearchField()
+
+        }
+
+    }
+
+    private fun toggleSearchField() {
+        if (isSearchVisible) {
+            binding.searchEditText.animate()
+                .alpha(0f)
+                .setDuration(300)
+                .withEndAction {
+                    binding.searchEditText.visibility = View.GONE
+                }
+        } else {
+            binding.searchEditText.visibility = View.VISIBLE
+            binding.searchEditText.animate().alpha(1f).setDuration(300).start()
+        }
+        isSearchVisible = !isSearchVisible
+    }
 
     private fun loadJSONFromAsset(): String? {
         return try {
@@ -60,6 +82,7 @@ class RoutesActivity : AppCompatActivity() {
             null
         }
     }
+
     private fun parseJson(json: String): Building? {
         return try {
             val gson = Gson()
@@ -83,7 +106,7 @@ class RoutesActivity : AppCompatActivity() {
               -2: gl_back,
               -3: rt,
               -4: nrg,
-              -5: ubk,
+              -5: ubk, //TODO проверить SVG ubk
               -6: gg,
               -7: him
            */
@@ -198,10 +221,10 @@ class RoutesActivity : AppCompatActivity() {
         if (pathPoints.isNotEmpty()) {
             drawPath(firstFloorCanvas, pathPoints)
             binding.floorMapImageView.setImageBitmap(firstFloorBitmap)
-            binding.floorMapImageView.background = null
             Toast.makeText(this, "Маршрут на 1 этаже не найден", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun drawHigherFloorRoute(buildingTag: String, floor: Floor, staircase: String, endRoomId: String) {
         try {
             val svgFileName = "${buildingTag}_${floor.id}.svg"
@@ -230,7 +253,6 @@ class RoutesActivity : AppCompatActivity() {
             if (pathPoints.isNotEmpty()) {
                 drawPath(floorCanvas, pathPoints)
                 binding.floorMapImageView.setImageBitmap(floorBitmap)
-                binding.floorMapImageView.background = null
             } else {
                 Toast.makeText(this, "Маршрут не найден", Toast.LENGTH_SHORT).show()
                 Log.e("MapActivity", "Не удалось нарисовать путь на этаже ${floor.id}")
@@ -308,6 +330,7 @@ class RoutesActivity : AppCompatActivity() {
 
         return emptyList()
     }
+
     private fun getPoint(id: String, doors: Map<String, Door>, hallways: Map<String, Hallway>, startPosition: List<Int>?): Point? {
         return when {
             id == "startPosition" && startPosition != null -> Point(startPosition[0], startPosition[1])
@@ -316,10 +339,11 @@ class RoutesActivity : AppCompatActivity() {
             else -> null
         }
     }
+
     private fun drawPath(canvas: Canvas, path: List<Point>) {
         val paint = Paint().apply {
             color = Color.RED
-            strokeWidth = 30f
+            strokeWidth = 25f
             style = Paint.Style.STROKE
         }
 

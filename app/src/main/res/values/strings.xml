@@ -6,5 +6,10 @@
     <string name="error_json_parsing">Ошибка парсинга JSON или неполные данные</string>
     <string name="error_json_loading">Ошибка загрузки JSON файла</string>
     <string name="error_text">Ошибка.</string>
+    <string name="search_button_to_animate_edittext">search button to animate editText</string>
+    <string name="hint_edit_value">№ АУДИТОРИИ</string>
+    <string name="image_description_first_floor">Первый этаж</string>
+    <string name="description_image_background_first_floor">Первый этаж</string>
+    <string name="activity_background">Activity background</string>
 
 </resources>

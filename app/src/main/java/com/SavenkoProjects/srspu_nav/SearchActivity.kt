@@ -52,16 +52,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun validateSearchText(searchText: String): Boolean {
-        /* Проверка на валидность
-        * Аудитория может содержать только буквы и цифры
-        * Например, "101" или "321А"
-        * Не может начинаться с буквы
-        *
-        * */
-        return searchText.isNotEmpty()
-                && searchText.first().isDigit()
-                && searchText.all { it.isLetterOrDigit() }
+        // Проверяем, что строка содержит ровно 3 цифры в начале
+        val regex = Regex("^\\d{3}А?$")
+        return searchText.matches(regex)
     }
+
 }
 
 

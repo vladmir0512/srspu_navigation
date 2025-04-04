@@ -12,7 +12,8 @@
         android:id="@+id/illustrationRoutes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="340dp"
+        android:layout_marginTop="490dp"
+
         android:contentDescription="@string/activity_background"
         android:scaleType="centerCrop"
         android:src="@drawable/college_class_bro"
@@ -22,49 +23,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.481">
-
-
     </ImageView>
 
-    <ImageView
-        android:id="@+id/mapImageViewBack"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_marginHorizontal="80dp"
-        android:contentDescription="@string/description_image_background_first_floor"
-        android:visibility="visible"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="14dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/mapImageViewBack"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/floorMapImageViewBack" />
-
-    <ImageView
-        android:id="@+id/mapImageView"
-        android:layout_width="165dp"
-        android:layout_height="140dp"
-        android:contentDescription="@string/image_description_first_floor"
-        android:visibility="visible"
-
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/mapImageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/floorMapImageView" />
 
     <ImageView
         android:id="@+id/floorMapImageViewBack"
         android:layout_width="match_parent"
-        android:layout_height="375dp"
+        android:layout_height="280dp"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
         android:layout_marginBottom="100dp"
-        android:background="@color/white"
+        android:background="@drawable/desk"
         android:contentDescription="@string/floor_map_description"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -72,11 +40,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.179" />
+
     <ImageView
         android:id="@+id/floorMapImageView"
-        android:layout_width="match_parent"
-        android:layout_height="330dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="450dp"
         android:layout_gravity="center"
         android:layout_marginHorizontal="5dp"
         android:contentDescription="@string/floor_map_description"
@@ -85,7 +53,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="190dp"
+        app:layout_constraintVertical_bias="0.179" />
+
+    <ImageView
+        android:id="@+id/mapImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="450dp"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="5dp"
+        android:contentDescription="@string/floor_map_description"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="190dp"
         app:layout_constraintVertical_bias="0.179" />
 
     <LinearLayout

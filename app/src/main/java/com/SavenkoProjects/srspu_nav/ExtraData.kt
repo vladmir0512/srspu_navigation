@@ -31,4 +31,4 @@ data class JSONData(
     val currentFloor: Floor,
     val firstFloor: Floor,
     val currentRoom: Door
-    )
+)

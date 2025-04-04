@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
+    <color name="red_on_board">#BFFF5151</color>
     <color name="figma_background">#378EFF</color>
     <color name="figma_skin">#FFB3AD</color>
     <color name="figma_purple">#774CEA</color>

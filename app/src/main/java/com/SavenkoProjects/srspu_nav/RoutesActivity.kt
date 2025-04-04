@@ -1,63 +1,129 @@
 package com.SavenkoProjects.srspu_nav
 
-import android.content.Intent
+import android.animation.Animator
+import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Point
-import android.graphics.drawable.PictureDrawable
-import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.SavenkoProjects.srspu_nav.databinding.ActivityMainBinding
+import androidx.core.graphics.createBitmap
+import androidx.core.view.isVisible
+import com.SavenkoProjects.srspu_nav.databinding.ActivityRoutesBinding
+import com.caverock.androidsvg.SVG
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
 import java.io.InputStream
-import com.SavenkoProjects.srspu_nav.databinding.ActivityRoutesBinding
-import com.caverock.androidsvg.SVG
+import androidx.core.graphics.toColorInt
 
 class RoutesActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityRoutesBinding
-    private var isSearchVisible = false  // Флаг видимости
-
+    private var isSearchVisible = false
+    private var building: Building? = null
+    private var isFirstState = true
     override fun onCreate(savedInstanceState: Bundle?) {
-        var building: Building? = null
-
         super.onCreate(savedInstanceState)
-
         val json = loadJSONFromAsset().toString()
         binding = ActivityRoutesBinding.inflate(layoutInflater)
+        binding.mapImageView.visibility = View.GONE;
         setContentView(binding.root)
-
         //---------------Получаем данные из Intent от SearchActivity---------------
-        val buildingId = 1
+        val buildingId = 0
         val searchText = intent.getStringExtra("searchText").toString()
         building = parseJson(json)
+
+
         Log.d("RoutesActivity", "searchText: $searchText")
         Log.d("RoutesActivity", "building: $building")
-        if (building != null && buildingId != null) {
+        if (building != null) {
                 drawMapWithRoute(
                     buildingId = buildingId,
-                    building = building,
+                    building = building!!,
                     endRoomId = searchText
                 )
         }
-
         binding.searchButton.setOnClickListener{
             toggleSearchField()
 
         }
-
+        binding.floorMapImageViewBack.setOnClickListener {
+            rotateImageView(binding.floorMapImageViewBack);
+        }
     }
+    private fun rotateImageView(imageView: View){
+        val animator: ObjectAnimator  = ObjectAnimator.ofFloat(
+            imageView,
+            "rotationX",
+            0f, 180f
+        );
+        // Добавляем слушатель для анимации
+        animator.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
+                if (isFirstState){
+                    binding.floorMapImageView.animate()
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction {
+                            binding.floorMapImageView.visibility = View.GONE
+                        }
+                }
+                else{
+                    binding.mapImageView.animate()
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction {
+                            binding.mapImageView.visibility = View.GONE
+                        }
+                }
 
+            }
+            override fun onAnimationEnd(animation: Animator) {
+                if (!isFirstState) {
+                    // Возвращаем все обратно
+                    binding.floorMapImageView.visibility = View.VISIBLE
+                    binding.floorMapImageView.animate().alpha(1f).setDuration(300).start()
+                }
+                else{
+                    binding.mapImageView.visibility = View.VISIBLE
+                    binding.mapImageView.animate().alpha(1f).setDuration(300).start()
+                }
+                // Переключаем состояние
+                isFirstState = !isFirstState
+            }
+            override fun onAnimationCancel(animation: Animator) {
+                if (isFirstState){
+                    binding.floorMapImageView.animate()
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction {
+                            binding.floorMapImageView.visibility = View.GONE
+                        }
+                }
+                else{
+                    binding.mapImageView.animate()
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction {
+                            binding.mapImageView.visibility = View.GONE
+                        }
+                }            }
+            override fun onAnimationRepeat(animation: Animator) {
+
+            }
+        })
+        animator.setDuration(1500)
+        // Запускаем анимацию
+        animator.start()
+    }
     private fun toggleSearchField() {
         if (isSearchVisible) {
             binding.searchEditText.animate()
@@ -110,7 +176,6 @@ class RoutesActivity : AppCompatActivity() {
               -6: gg,
               -7: him
            */
-
             //-----------------------------Словарь зданий---------------------------------
             val buildingsDict = mapOf(
                 1 to "lk",
@@ -122,7 +187,6 @@ class RoutesActivity : AppCompatActivity() {
                 7 to "gg",
                 8 to "him"
             )
-
             //-----------------------------Получаем здание как объект---------------------------------
             val someBuilding = building.building
             val buildingTag = buildingsDict[buildingId + 1]
@@ -146,40 +210,22 @@ class RoutesActivity : AppCompatActivity() {
             } else {
                 drawRouteOnFirstFloor(firstFloor, endRoomId, firstFloorCanvas, firstFloorBitmap)
             }
-
-
-
-
-
-
-
         } catch (e: Exception) {
             Log.e("MapActivity", "Ошибка загрузки карты", e)
         }
     }
-
     private fun loadSvgBitmap(svgFileName: String): Bitmap? {
         return try {
-            assets.open(svgFileName).use { inputStream ->
-                val svg = SVG.getFromInputStream(inputStream)
-                val picture = svg.renderToPicture()
-                val drawable = PictureDrawable(picture)
-                val bitmap = Bitmap.createBitmap(
-                    drawable.intrinsicWidth,
-                    drawable.intrinsicHeight,
-                    Bitmap.Config.ARGB_8888
-                )
-                val canvas = Canvas(bitmap)
-                drawable.setBounds(0, 0, canvas.width, canvas.height)
-                drawable.draw(canvas)
-                bitmap
-            }
+            val svg = SVG.getFromAsset(this.assets, svgFileName)
+            val bitmap = createBitmap(svg.documentWidth.toInt(), svg.documentHeight.toInt())
+            val canvas = Canvas(bitmap)
+            svg.renderToCanvas(canvas)
+            bitmap
         } catch (e: IOException) {
             Log.e("MapActivity", "Ошибка загрузки SVG", e)
             null
         }
     }
-
     private fun drawRouteOnHigherFloor(currentBuilding: BuildingData, floorNumber: Int, endRoomId: String, firstFloor: Floor, firstFloorCanvas: Canvas, firstFloorBitmap: Bitmap, buildingTag: String?) {
         val targetFloor = currentBuilding.floors.find { it.id == floorNumber } ?: return
         val endRoom = targetFloor.doors[endRoomId] ?: return
@@ -192,12 +238,9 @@ class RoutesActivity : AppCompatActivity() {
         }
         if (firstFloorPathPoints.isNotEmpty()) {
 
-
             if (buildingTag != null) {
                 drawPath(firstFloorCanvas, firstFloorPathPoints)
                 binding.mapImageView.setImageBitmap(firstFloorBitmap)
-                binding.mapImageView.visibility = View.VISIBLE
-                binding.mapImageView.background = null
                 drawHigherFloorRoute(buildingTag, targetFloor, targetStaircase, endRoomId)
             } else {
                 Toast.makeText(
@@ -212,7 +255,6 @@ class RoutesActivity : AppCompatActivity() {
                 .show()
         }
     }
-
     private fun drawRouteOnFirstFloor(firstFloor: Floor, endRoomId: String, firstFloorCanvas: Canvas, firstFloorBitmap: Bitmap) {
         val pathIds = findPath(firstFloor, "startPosition", endRoomId)
         val pathPoints = pathIds.mapNotNull {
@@ -224,7 +266,6 @@ class RoutesActivity : AppCompatActivity() {
             Toast.makeText(this, "Маршрут на 1 этаже не найден", Toast.LENGTH_SHORT).show()
         }
     }
-
     private fun drawHigherFloorRoute(buildingTag: String, floor: Floor, staircase: String, endRoomId: String) {
         try {
             val svgFileName = "${buildingTag}_${floor.id}.svg"
@@ -237,19 +278,15 @@ class RoutesActivity : AppCompatActivity() {
                 Log.e("MapActivity", "Аудитория $endRoomId отсутствует на этаже ${floor.id}")
                 return  // 🚀 Выход из метода
             }
-
             val pathIds = findPath(floor, staircase, endRoomId)
-
             if (pathIds.isEmpty()) {
                 Toast.makeText(this, "Маршрут не найден", Toast.LENGTH_SHORT).show()
                 Log.e("MapActivity", "Путь не найден на этаже ${floor.id} от $staircase до $endRoomId")
                 return  // 🚀 Выход из метода
             }
-
             val pathPoints = pathIds.mapNotNull {
                 getPoint(it, floor.doors, floor.hallways, floor.startPosition)
             }
-
             if (pathPoints.isNotEmpty()) {
                 drawPath(floorCanvas, pathPoints)
                 binding.floorMapImageView.setImageBitmap(floorBitmap)
@@ -261,10 +298,8 @@ class RoutesActivity : AppCompatActivity() {
             Log.e("MapActivity", "Ошибка загрузки карты этажа", e)
         }
     }
-
     private fun findPath(floor: Floor, start: String, target: String): List<String> {
         Log.d("MapActivity", "Поиск пути на этаже ${floor.id} от $start до $target")
-
         // Проверяем, существуют ли начальная и конечная точки в данных
         val startExists = floor.connections.containsKey(start) ||
                 floor.doors.containsKey(start) ||
@@ -274,10 +309,8 @@ class RoutesActivity : AppCompatActivity() {
         val targetExists = floor.connections.containsKey(target) ||
                 floor.doors.containsKey(target) ||
                 floor.hallways.containsKey(target)
-
         Log.d("MapActivity", "Начальная точка '$start' существует: $startExists")
         Log.d("MapActivity", "Конечная точка '$target' существует: $targetExists")
-
         // Если начальная точка не существует, но это верхний этаж, пробуем использовать основной узел этажа
         if (!startExists && floor.id > 1) {
             val floorMainNode = "H${floor.id}"
@@ -286,33 +319,26 @@ class RoutesActivity : AppCompatActivity() {
                 return findPath(floor, floorMainNode, target)
             }
         }
-
         if (!startExists || !targetExists) {
             Log.e("MapActivity", "Начальная или конечная точка не существует в данных этажа ${floor.id}")
             return emptyList()
         }
-
         val queue: MutableList<List<String>> = mutableListOf(listOf(start))
         val visited: MutableSet<String> = mutableSetOf()
-
         var iterations = 0
         val maxIterations = 1000 // Защита от бесконечного цикла
-
         while (queue.isNotEmpty() && iterations < maxIterations) {
             iterations++
             val path = queue.removeAt(0)
             val node = path.last()
-
             if (node == target) {
                 Log.d("MapActivity", "Путь найден за $iterations итераций: $path")
                 return path
             }
-
             if (node !in visited) {
                 visited.add(node)
                 val neighbors = floor.connections[node] ?: emptyList()
                 Log.d("MapActivity", "Узел: $node, соседи: $neighbors")
-
                 for (neighbor in neighbors) {
                     if (neighbor !in visited) {
                         val newPath = path + neighbor
@@ -321,16 +347,13 @@ class RoutesActivity : AppCompatActivity() {
                 }
             }
         }
-
         if (iterations >= maxIterations) {
             Log.e("MapActivity", "Превышено максимальное количество итераций при поиске пути")
         } else {
             Log.e("MapActivity", "Путь не найден. Посещено ${visited.size} узлов")
         }
-
         return emptyList()
     }
-
     private fun getPoint(id: String, doors: Map<String, Door>, hallways: Map<String, Hallway>, startPosition: List<Int>?): Point? {
         return when {
             id == "startPosition" && startPosition != null -> Point(startPosition[0], startPosition[1])
@@ -339,14 +362,13 @@ class RoutesActivity : AppCompatActivity() {
             else -> null
         }
     }
-
+    @SuppressLint("UseKtx")
     private fun drawPath(canvas: Canvas, path: List<Point>) {
         val paint = Paint().apply {
-            color = Color.RED
+            color = "#BFFF5151".toColorInt()
             strokeWidth = 25f
             style = Paint.Style.STROKE
         }
-
         val androidPath = Path()
         if (path.isNotEmpty()) {
             androidPath.moveTo(path[0].x.toFloat(), path[0].y.toFloat())
@@ -363,10 +385,8 @@ class RoutesActivity : AppCompatActivity() {
             2 -> Pair("stairs_left_lk2", "stairs_right_lk2")
             3 -> Pair("stairs_left_lk3", "stairs_right_lk3")
             4 -> Pair("stairs_left_lk4", "stairs_right_lk4")
-
             else -> Pair("HSL", "HSR")
         }
-
         // Получаем координаты лестниц из данных этажа
         val leftStaircase = floor.hallways[leftStaircaseId]?.path?.get(0)
         val rightStaircase = floor.hallways[rightStaircaseId]?.path?.get(0)

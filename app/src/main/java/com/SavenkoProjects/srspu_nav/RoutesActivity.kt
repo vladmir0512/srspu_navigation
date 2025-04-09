@@ -12,6 +12,7 @@ import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.createBitmap
@@ -38,9 +39,19 @@ class RoutesActivity : AppCompatActivity() {
         setContentView(binding.root)
         //---------------Получаем данные из Intent от SearchActivity---------------
         val buildingId = 0
+        if (buildingId == 0){
+            binding.floorMapImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+            binding.mapImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+
+        }
+        else {
+            binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+
+        }
+
         val searchText = intent.getStringExtra("searchText").toString()
         building = parseJson(json)
-
 
         Log.d("RoutesActivity", "searchText: $searchText")
         Log.d("RoutesActivity", "building: $building")
@@ -167,7 +178,7 @@ class RoutesActivity : AppCompatActivity() {
         try {
             /*
             buildingId получаем из QR-кода, например:
-              -0: lk,
+              -0: lk, ✓
               -1: gl_front,
               -2: gl_back,
               -3: rt,

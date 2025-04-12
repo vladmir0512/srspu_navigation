@@ -3,6 +3,7 @@ package com.SavenkoProjects.srspu_nav
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -12,6 +13,7 @@ import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,53 +27,108 @@ import com.google.gson.reflect.TypeToken
 import java.io.IOException
 import java.io.InputStream
 import androidx.core.graphics.toColorInt
+import kotlin.properties.Delegates
 
 class RoutesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRoutesBinding
     private var isSearchVisible = false
     private var building: Building? = null
     private var isFirstState = true
+    private var isHigherFloor: Boolean? = null
+    private var buildingId by Delegates.notNull<Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         val json = loadJSONFromAsset().toString()
+        super.onCreate(savedInstanceState)
         binding = ActivityRoutesBinding.inflate(layoutInflater)
         binding.mapImageView.visibility = View.GONE;
         setContentView(binding.root)
+
+        val paramsExtraImageView = binding.mapImageView.layoutParams as FrameLayout.LayoutParams
+        val paramsMainImageView =
+            binding.floorMapImageView.layoutParams as FrameLayout.LayoutParams
+        /*
+                 buildingId получаем из QR-кода, например:
+                   -0: lk, ✓
+                   -1: gl_front,
+                   -2: gl_back,
+                   -3: rt,
+                   -4: nrg,
+                   -5: ubk, //TODO проверить SVG ubk
+                   -6: gg,
+                   -7: him
+                */
         //---------------Получаем данные из Intent от SearchActivity---------------
-        val buildingId = 0
-        if (buildingId == 0){
-            binding.floorMapImageView.scaleType = ImageView.ScaleType.CENTER_CROP
-            binding.mapImageView.scaleType = ImageView.ScaleType.CENTER_CROP
-
-        }
-        else {
-            binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
-            binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
-
-        }
-
+        buildingId = 4
         val searchText = intent.getStringExtra("searchText").toString()
+        val floor = searchText[0].toString().toInt()
+        resizeImageView(floor,paramsMainImageView)
         building = parseJson(json)
-
-        Log.d("RoutesActivity", "searchText: $searchText")
-        Log.d("RoutesActivity", "building: $building")
         if (building != null) {
-                drawMapWithRoute(
-                    buildingId = buildingId,
-                    building = building!!,
-                    endRoomId = searchText
-                )
+            drawMapWithRoute(
+                buildingId = buildingId,
+                building = building!!,
+                endRoomId = searchText
+            )
         }
-        binding.searchButton.setOnClickListener{
+        binding.searchButton.setOnClickListener {
             toggleSearchField()
-
         }
         binding.floorMapImageViewBack.setOnClickListener {
             rotateImageView(binding.floorMapImageViewBack);
         }
     }
-    private fun rotateImageView(imageView: View){
-        val animator: ObjectAnimator  = ObjectAnimator.ofFloat(
+    // Функция для перевода dp в px
+    private fun Int.toPx(context: Context): Int =
+        (this * context.resources.displayMetrics.density).toInt()
+    private fun resizeImageView(floor: Int, paramsMainImageView:  FrameLayout.LayoutParams){
+        when (buildingId) {
+            0 -> {
+                binding.floorMapImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                binding.mapImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                if (floor > 1){
+                    paramsMainImageView.topMargin = 70.toPx(this)
+                    binding.floorMapImageView.layoutParams = paramsMainImageView
+                }
+            }
+            1 -> {
+                binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+                binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+            2 -> {
+                binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+                binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+            3 -> {
+                binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+                binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+            4 -> {
+                binding.floorMapImageView.setPadding(0,10,0,10)
+                binding.mapImageView.setPadding(0,10,0,10)
+                binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+                binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+            5 -> {
+                binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+                binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+            6 -> {
+                binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+                binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+            7 -> {
+                binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+                binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+            else -> {
+                Toast.makeText(this, "Неверный номер здания",
+                    Toast.LENGTH_SHORT)
+                Log.e("RoutesActivity", "Неверный номер здания")
+            }
+        }
+    }
+    private fun rotateImageView(imageView: View) {
+        val animator: ObjectAnimator = ObjectAnimator.ofFloat(
             imageView,
             "rotationX",
             0f, 180f
@@ -79,15 +136,14 @@ class RoutesActivity : AppCompatActivity() {
         // Добавляем слушатель для анимации
         animator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator) {
-                if (isFirstState){
+                if (isFirstState) {
                     binding.floorMapImageView.animate()
                         .alpha(0f)
                         .setDuration(300)
                         .withEndAction {
                             binding.floorMapImageView.visibility = View.GONE
                         }
-                }
-                else{
+                } else {
                     binding.mapImageView.animate()
                         .alpha(0f)
                         .setDuration(300)
@@ -95,15 +151,13 @@ class RoutesActivity : AppCompatActivity() {
                             binding.mapImageView.visibility = View.GONE
                         }
                 }
-
             }
             override fun onAnimationEnd(animation: Animator) {
                 if (!isFirstState) {
                     // Возвращаем все обратно
                     binding.floorMapImageView.visibility = View.VISIBLE
                     binding.floorMapImageView.animate().alpha(1f).setDuration(300).start()
-                }
-                else{
+                } else {
                     binding.mapImageView.visibility = View.VISIBLE
                     binding.mapImageView.animate().alpha(1f).setDuration(300).start()
                 }
@@ -111,28 +165,25 @@ class RoutesActivity : AppCompatActivity() {
                 isFirstState = !isFirstState
             }
             override fun onAnimationCancel(animation: Animator) {
-                if (isFirstState){
+                if (isFirstState) {
                     binding.floorMapImageView.animate()
                         .alpha(0f)
                         .setDuration(300)
                         .withEndAction {
                             binding.floorMapImageView.visibility = View.GONE
                         }
-                }
-                else{
+                } else {
                     binding.mapImageView.animate()
                         .alpha(0f)
                         .setDuration(300)
                         .withEndAction {
                             binding.mapImageView.visibility = View.GONE
                         }
-                }            }
-            override fun onAnimationRepeat(animation: Animator) {
-
+                }
             }
+            override fun onAnimationRepeat(animation: Animator) {}
         })
         animator.setDuration(1500)
-        // Запускаем анимацию
         animator.start()
     }
     private fun toggleSearchField() {
@@ -149,7 +200,6 @@ class RoutesActivity : AppCompatActivity() {
         }
         isSearchVisible = !isSearchVisible
     }
-
     private fun loadJSONFromAsset(): String? {
         return try {
             val inputStream: InputStream = assets.open("building_data.json")
@@ -159,7 +209,6 @@ class RoutesActivity : AppCompatActivity() {
             null
         }
     }
-
     private fun parseJson(json: String): Building? {
         return try {
             val gson = Gson()
@@ -173,20 +222,8 @@ class RoutesActivity : AppCompatActivity() {
             null
         }
     }
-
     private fun drawMapWithRoute(buildingId: Int, endRoomId: String, building: Building) {
         try {
-            /*
-            buildingId получаем из QR-кода, например:
-              -0: lk, ✓
-              -1: gl_front,
-              -2: gl_back,
-              -3: rt,
-              -4: nrg,
-              -5: ubk, //TODO проверить SVG ubk
-              -6: gg,
-              -7: him
-           */
             //-----------------------------Словарь зданий---------------------------------
             val buildingsDict = mapOf(
                 1 to "lk",
@@ -202,22 +239,28 @@ class RoutesActivity : AppCompatActivity() {
             val someBuilding = building.building
             val buildingTag = buildingsDict[buildingId + 1]
             Log.d("MapActivity", "Тег выбранного здания $buildingTag")
-
             //-----------------------------Получаем здание по id---------------------------------
             val currentBuilding = someBuilding.get(buildingId) ?: return
             val currentBuildingName = currentBuilding.name
             Toast.makeText(this, "Здание $currentBuildingName выбрано", Toast.LENGTH_SHORT).show()
-
             //-----------------------------Получаем этаж по номеру---------------------------------
             val floorNumber = endRoomId.firstOrNull()?.digitToIntOrNull()
-            val isHigherFloor = floorNumber!! > 1
+            isHigherFloor = floorNumber!! > 1
             //-----------------------------Получаем первый этаж---------------------------------
             val firstFloor = currentBuilding.floors.find { it.id == 1 } ?: return
             val firstFloorBitmap = loadSvgBitmap("${buildingTag}_1.svg") ?: return
             val firstFloorCanvas = Canvas(firstFloorBitmap)
-
-            if (isHigherFloor) {
-                drawRouteOnHigherFloor(currentBuilding, floorNumber, endRoomId, firstFloor, firstFloorCanvas, firstFloorBitmap, buildingTag)
+            //-----------------------------Этаж выше первого?-"---------------------------------
+            if (isHigherFloor == true) {
+                drawRouteOnHigherFloor(
+                    currentBuilding,
+                    floorNumber,
+                    endRoomId,
+                    firstFloor,
+                    firstFloorCanvas,
+                    firstFloorBitmap,
+                    buildingTag
+                )
             } else {
                 drawRouteOnFirstFloor(firstFloor, endRoomId, firstFloorCanvas, firstFloorBitmap)
             }
@@ -237,15 +280,25 @@ class RoutesActivity : AppCompatActivity() {
             null
         }
     }
-    private fun drawRouteOnHigherFloor(currentBuilding: BuildingData, floorNumber: Int, endRoomId: String, firstFloor: Floor, firstFloorCanvas: Canvas, firstFloorBitmap: Bitmap, buildingTag: String?) {
+    private fun drawRouteOnHigherFloor(
+        currentBuilding: BuildingData,
+        floorNumber: Int,
+        endRoomId: String,
+        firstFloor: Floor,
+        firstFloorCanvas: Canvas,
+        firstFloorBitmap: Bitmap,
+        buildingTag: String?
+    ) {
         val targetFloor = currentBuilding.floors.find { it.id == floorNumber } ?: return
         val endRoom = targetFloor.doors[endRoomId] ?: return
         val targetStaircase = findNearestStaircase(endRoom.position[0], targetFloor)
         val firstFloorStaircase =
             if (targetStaircase.contains("left")) "stairs_left" else "stairs_right"
-        val firstFloorPath = findPath(firstFloor, "startPosition", firstFloorStaircase)
+        val firstFloorPath = findPath(firstFloor, "startPosition",
+            firstFloorStaircase)
         val firstFloorPathPoints = firstFloorPath.mapNotNull {
-            getPoint(it, firstFloor.doors, firstFloor.hallways, firstFloor.startPosition)
+            getPoint(it, firstFloor.doors, firstFloor.hallways,
+                firstFloor.startPosition)
         }
         if (firstFloorPathPoints.isNotEmpty()) {
 
@@ -262,22 +315,36 @@ class RoutesActivity : AppCompatActivity() {
                 Log.d("MapActivity", "buildingTag не найден")
             }
         } else {
-            Toast.makeText(this, "Маршрут на первом этаже не найден", Toast.LENGTH_SHORT)
+            Toast.makeText(this, "Маршрут на первом этаже не найден",
+                Toast.LENGTH_SHORT)
                 .show()
         }
     }
-    private fun drawRouteOnFirstFloor(firstFloor: Floor, endRoomId: String, firstFloorCanvas: Canvas, firstFloorBitmap: Bitmap) {
+    private fun drawRouteOnFirstFloor(
+        firstFloor: Floor,
+        endRoomId: String,
+        firstFloorCanvas: Canvas,
+        firstFloorBitmap: Bitmap
+    ) {
         val pathIds = findPath(firstFloor, "startPosition", endRoomId)
         val pathPoints = pathIds.mapNotNull {
-            getPoint(it, firstFloor.doors, firstFloor.hallways, firstFloor.startPosition)
+            getPoint(it, firstFloor.doors, firstFloor.hallways,
+                firstFloor.startPosition)
         }
         if (pathPoints.isNotEmpty()) {
             drawPath(firstFloorCanvas, pathPoints)
             binding.floorMapImageView.setImageBitmap(firstFloorBitmap)
-            Toast.makeText(this, "Маршрут на 1 этаже не найден", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Маршрут на 1 этаже не найден",
+                Toast.LENGTH_SHORT).show()
         }
     }
-    private fun drawHigherFloorRoute(buildingTag: String, floor: Floor, staircase: String, endRoomId: String) {
+
+    private fun drawHigherFloorRoute(
+        buildingTag: String,
+        floor: Floor,
+        staircase: String,
+        endRoomId: String
+    ) {
         try {
             val svgFileName = "${buildingTag}_${floor.id}.svg"
             val floorBitmap = loadSvgBitmap(svgFileName) ?: return
@@ -292,7 +359,10 @@ class RoutesActivity : AppCompatActivity() {
             val pathIds = findPath(floor, staircase, endRoomId)
             if (pathIds.isEmpty()) {
                 Toast.makeText(this, "Маршрут не найден", Toast.LENGTH_SHORT).show()
-                Log.e("MapActivity", "Путь не найден на этаже ${floor.id} от $staircase до $endRoomId")
+                Log.e(
+                    "MapActivity",
+                    "Путь не найден на этаже ${floor.id} от $staircase до $endRoomId"
+                )
                 return  // 🚀 Выход из метода
             }
             val pathPoints = pathIds.mapNotNull {
@@ -309,6 +379,7 @@ class RoutesActivity : AppCompatActivity() {
             Log.e("MapActivity", "Ошибка загрузки карты этажа", e)
         }
     }
+
     private fun findPath(floor: Floor, start: String, target: String): List<String> {
         Log.d("MapActivity", "Поиск пути на этаже ${floor.id} от $start до $target")
         // Проверяем, существуют ли начальная и конечная точки в данных
@@ -325,13 +396,22 @@ class RoutesActivity : AppCompatActivity() {
         // Если начальная точка не существует, но это верхний этаж, пробуем использовать основной узел этажа
         if (!startExists && floor.id > 1) {
             val floorMainNode = "H${floor.id}"
-            if (floor.connections.containsKey(floorMainNode) || floor.hallways.containsKey(floorMainNode)) {
-                Log.d("MapActivity", "Заменяем начальную точку '$start' на основной узел этажа '$floorMainNode'")
+            if (floor.connections.containsKey(floorMainNode) || floor.hallways.containsKey(
+                    floorMainNode
+                )
+            ) {
+                Log.d(
+                    "MapActivity",
+                    "Заменяем начальную точку '$start' на основной узел этажа '$floorMainNode'"
+                )
                 return findPath(floor, floorMainNode, target)
             }
         }
         if (!startExists || !targetExists) {
-            Log.e("MapActivity", "Начальная или конечная точка не существует в данных этажа ${floor.id}")
+            Log.e(
+                "MapActivity",
+                "Начальная или конечная точка не существует в данных этажа ${floor.id}"
+            )
             return emptyList()
         }
         val queue: MutableList<List<String>> = mutableListOf(listOf(start))
@@ -365,14 +445,25 @@ class RoutesActivity : AppCompatActivity() {
         }
         return emptyList()
     }
-    private fun getPoint(id: String, doors: Map<String, Door>, hallways: Map<String, Hallway>, startPosition: List<Int>?): Point? {
+
+    private fun getPoint(
+        id: String,
+        doors: Map<String, Door>,
+        hallways: Map<String, Hallway>,
+        startPosition: List<Int>?
+    ): Point? {
         return when {
-            id == "startPosition" && startPosition != null -> Point(startPosition[0], startPosition[1])
+            id == "startPosition" && startPosition != null -> Point(
+                startPosition[0],
+                startPosition[1]
+            )
+
             doors.containsKey(id) -> Point(doors[id]!!.position[0], doors[id]!!.position[1])
             hallways.containsKey(id) -> Point(hallways[id]!!.path[0][0], hallways[id]!!.path[0][1])
             else -> null
         }
     }
+
     @SuppressLint("UseKtx")
     private fun drawPath(canvas: Canvas, path: List<Point>) {
         val paint = Paint().apply {
@@ -389,13 +480,14 @@ class RoutesActivity : AppCompatActivity() {
         }
         canvas.drawPath(androidPath, paint)
     }
+
     private fun findNearestStaircase(x: Int, floor: Floor): String {
         // Определяем идентификаторы лестниц в зависимости от этажа
         val (leftStaircaseId, rightStaircaseId) = when (floor.id) {
             1 -> Pair("stairs_left", "stairs_right")
-            2 -> Pair("stairs_left_lk2", "stairs_right_lk2")
-            3 -> Pair("stairs_left_lk3", "stairs_right_lk3")
-            4 -> Pair("stairs_left_lk4", "stairs_right_lk4")
+            2 -> Pair("stairs_left", "stairs_right")
+            3 -> Pair("stairs_left", "stairs_right")
+            4 -> Pair("stairs_left", "stairs_right")
             else -> Pair("HSL", "HSR")
         }
         // Получаем координаты лестниц из данных этажа
@@ -445,6 +537,4 @@ class RoutesActivity : AppCompatActivity() {
             rightStaircaseId
         }
     }
-
-
 }

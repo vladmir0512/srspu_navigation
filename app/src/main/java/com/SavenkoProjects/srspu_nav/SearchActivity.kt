@@ -8,27 +8,22 @@ import androidx.appcompat.app.AppCompatActivity
 import com.SavenkoProjects.srspu_nav.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
-
-    private var editTextSearch: EditText? = null
-    private var searchButton: Button? = null
-    private var mapButton: Button? = null
+    private lateinit var editTextSearch: EditText
+    private lateinit var searchButton: Button
+    private lateinit var mapButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         editTextSearch = binding.editTextSearch
         searchButton = binding.searchButton
         mapButton = binding.mapButton
         setOnClickListeners()
-
     }
-
     private fun setOnClickListeners() {
-        searchButton?.setOnClickListener {
-            val searchText = editTextSearch?.text.toString()
+        searchButton.setOnClickListener {
+            val searchText = editTextSearch.text.toString()
             val isValid = validateSearchText(searchText)
 
             if (isValid) {
@@ -37,10 +32,10 @@ class SearchActivity : AppCompatActivity() {
                 }
                 startActivity(intent)
             } else {
-                editTextSearch?.error = "Введите корректный номер аудитории"
+                editTextSearch.error = "Введите корректный номер аудитории"
             }
 
-            mapButton?.setOnClickListener {
+            mapButton.setOnClickListener {
                 val buildingId = intent.getStringExtra("buildingId")
                 val intent = Intent(this, CampusActivity::class.java).apply {
                     putExtra("buildingId", buildingId)
@@ -51,9 +46,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /** Проверяем с помощью [Regex], что [searchText] содержит ровно 3 цифры в начале, может содержать только символ 'А'  */
     private fun validateSearchText(searchText: String): Boolean {
-        // Проверяем, что строка содержит ровно 3 цифры в начале
-        val regex = Regex("^\\d{3}А?$")
+        val regex = Regex("^\\d{3}[А,Б]?$")
         return searchText.matches(regex)
     }
 

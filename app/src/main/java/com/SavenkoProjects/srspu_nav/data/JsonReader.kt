@@ -13,10 +13,10 @@ class JsonReader {
 			val type = object : TypeToken<Building>() {}.type
 			gson.fromJson(json, type)
 		} catch (e: JsonSyntaxException) {
-			Log.e("MainActivity", "Ошибка парсинга JSON: ${e.message}", e)
+			Log.e(Constants.MAIN_ACTIVITY, Constants.ERROR_JSON + { e.message })
 			null
 		} catch (e: Exception) {
-			Log.e("MainActivity", "Непредвиденная ошибка при парсинге JSON: ${e.message}", e)
+			Log.e("MainActivity", Constants.UNEXPECTED_ERROR_JSON + { e.message })
 			null
 		}
 	}

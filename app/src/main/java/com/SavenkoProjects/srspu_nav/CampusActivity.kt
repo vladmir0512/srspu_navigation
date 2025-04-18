@@ -2,6 +2,7 @@ package com.SavenkoProjects.srspu_nav
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.SavenkoProjects.srspu_nav.data.Constants.IMAGE_CAMPUS
 import com.SavenkoProjects.srspu_nav.databinding.ActivityCampusBinding
 
 
@@ -15,7 +16,7 @@ class CampusActivity : AppCompatActivity() {
 
 	private fun setWebView(binding: ActivityCampusBinding) {
 		val webView = binding.webView
-		webView.loadUrl("file:///android_asset/karta.jpg")
+		webView.loadUrl(IMAGE_CAMPUS)
 		webView.settings.builtInZoomControls = true
 		webView.settings.displayZoomControls = true
 	}

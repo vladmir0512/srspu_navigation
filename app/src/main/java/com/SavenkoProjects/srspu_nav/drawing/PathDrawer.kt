@@ -1,17 +1,20 @@
 package com.SavenkoProjects.srspu_nav.drawing
 
+import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Point
-import androidx.core.graphics.toColorInt
+import com.SavenkoProjects.srspu_nav.R
+import com.SavenkoProjects.srspu_nav.data.Constants.START_POSITION
 import com.SavenkoProjects.srspu_nav.data.Door
 import com.SavenkoProjects.srspu_nav.data.Hallway
 
 class PathDrawer {
-    fun drawPath(canvas: Canvas, path: List<Point>) {
+    @SuppressLint("ResourceAsColor")
+	fun drawPath(canvas: Canvas, path: List<Point>) {
         val paint = Paint().apply {
-            color = "#BFFF5151".toColorInt()
+            color = R.color.draw_path
             strokeWidth = 25f
             style = Paint.Style.STROKE
         }
@@ -33,7 +36,7 @@ class PathDrawer {
         startPosition: List<Int>?
     ): Point? {
         return when {
-            id == "startPosition" && startPosition != null -> Point(
+            id == START_POSITION && startPosition != null -> Point(
                 startPosition[0],
                 startPosition[1]
             )

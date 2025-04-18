@@ -3,6 +3,7 @@ package com.SavenkoProjects.srspu_nav.utils
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.view.View
+import com.SavenkoProjects.srspu_nav.data.Constants.ROTATION_X
 import com.SavenkoProjects.srspu_nav.databinding.ActivityRoutesBinding
 
 data class AnimationManager(
@@ -11,7 +12,7 @@ data class AnimationManager(
     fun rotateMapAnimation(imageView: View, isFirstState: Boolean) {
         val animator: ObjectAnimator = ObjectAnimator.ofFloat(
             imageView,
-            "rotationX",
+            ROTATION_X,
             0f, 180f
         )
 

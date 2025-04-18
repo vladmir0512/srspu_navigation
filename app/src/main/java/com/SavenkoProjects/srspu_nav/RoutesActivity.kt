@@ -5,6 +5,8 @@ import android.util.Log
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.SavenkoProjects.srspu_nav.data.Building
+import com.SavenkoProjects.srspu_nav.data.Constants.SEARCH_TEXT
+import com.SavenkoProjects.srspu_nav.data.Constants.EXCEPTION_LOAD_JSON
 import com.SavenkoProjects.srspu_nav.data.JsonReader
 import com.SavenkoProjects.srspu_nav.data.SvgReader
 import com.SavenkoProjects.srspu_nav.databinding.ActivityRoutesBinding
@@ -34,8 +36,6 @@ class RoutesActivity : AppCompatActivity() {
 		buildingId = 0
 		binding = ActivityRoutesBinding.inflate(layoutInflater)
 		setContentView(binding.root)
-		val inputStream: InputStream = assets.open("building_data.json")
-
 		initializeManagers()
 		setupUI()
 
@@ -43,7 +43,7 @@ class RoutesActivity : AppCompatActivity() {
 		val paramsMainImageView =
 			binding.floorMapImageView.layoutParams as FrameLayout.LayoutParams
 		buildingId = 0
-		val searchText = intent.getStringExtra("searchText").toString()
+		val searchText = intent.getStringExtra(SEARCH_TEXT).toString()
 		val floor = searchText[0].toString().toInt()
 		mapManager.resizeImageView(floor,paramsMainImageView)
 		building = jsonReader.parseJson(json)
@@ -67,7 +67,7 @@ class RoutesActivity : AppCompatActivity() {
 			val filename: String = "building_data.json"
 			assets.open(filename).bufferedReader().use { it.readText() }
 		} catch (ex: IOException) {
-			Log.e("JsonReader", "Ошибка загрузки JSON файла: ${ex.message}", ex)
+			Log.e("JsonReader", EXCEPTION_LOAD_JSON + ex.message)
 			null
 		}
 	}

@@ -5,51 +5,55 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.SavenkoProjects.srspu_nav.data.Constants.BUILDING_ID
+import com.SavenkoProjects.srspu_nav.data.Constants.INPUT_CORRECT_ROOM_NUMBER
+import com.SavenkoProjects.srspu_nav.data.Constants.SEARCH_TEXT
 import com.SavenkoProjects.srspu_nav.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
-    private lateinit var editTextSearch: EditText
-    private lateinit var searchButton: Button
-    private lateinit var mapButton: Button
+	private lateinit var editTextSearch: EditText
+	private lateinit var searchButton: Button
+	private lateinit var mapButton: Button
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        editTextSearch = binding.editTextSearch
-        searchButton = binding.searchButton
-        mapButton = binding.mapButton
-        setOnClickListeners()
-    }
-    private fun setOnClickListeners() {
-        searchButton.setOnClickListener {
-            val searchText = editTextSearch.text.toString()
-            val isValid = validateSearchText(searchText)
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		val binding = ActivitySearchBinding.inflate(layoutInflater)
+		setContentView(binding.root)
+		editTextSearch = binding.editTextSearch
+		searchButton = binding.searchButton
+		mapButton = binding.mapButton
+		setOnClickListeners()
+	}
 
-            if (isValid) {
-                val intent = Intent(this, RoutesActivity::class.java).apply {
-                    putExtra("searchText", searchText)
-                }
-                startActivity(intent)
-            } else {
-                editTextSearch.error = "Введите корректный номер аудитории"
-            }
+	private fun setOnClickListeners() {
+		searchButton.setOnClickListener {
+			val searchText = editTextSearch.text.toString()
+			val isValid = validateSearchText(searchText)
 
-            mapButton.setOnClickListener {
-                val buildingId = intent.getStringExtra("buildingId")
-                val intent = Intent(this, CampusActivity::class.java).apply {
-                    putExtra("buildingId", buildingId)
-                }
+			if (isValid) {
+				val intent = Intent(this, RoutesActivity::class.java).apply {
+					putExtra(SEARCH_TEXT, searchText)
+				}
+				startActivity(intent)
+			} else {
+				editTextSearch.error = INPUT_CORRECT_ROOM_NUMBER
+			}
 
-                startActivity(intent)
-            }
-        }
-    }
+			mapButton.setOnClickListener {
+				val buildingId = intent.getStringExtra(BUILDING_ID)
+				val intent = Intent(this, CampusActivity::class.java).apply {
+					putExtra(BUILDING_ID, buildingId)
+				}
 
-    /** Проверяем с помощью [Regex], что [searchText] содержит ровно 3 цифры в начале, может содержать только символ 'А'  */
-    private fun validateSearchText(searchText: String): Boolean {
-        val regex = Regex("^\\d{3}[А,Б]?$")
-        return searchText.matches(regex)
-    }
+				startActivity(intent)
+			}
+		}
+	}
+
+	/** Проверяем с помощью [Regex], что [searchText] содержит ровно 3 цифры в начале, может содержать только символ 'А'  */
+	private fun validateSearchText(searchText: String): Boolean {
+		val regex = Regex("^\\d{3}[А,Б]?$")
+		return searchText.matches(regex)
+	}
 
 }

@@ -6,6 +6,15 @@ import android.graphics.Canvas
 import android.util.Log
 import android.widget.Toast
 import com.SavenkoProjects.srspu_nav.data.BuildingData
+import com.SavenkoProjects.srspu_nav.data.Constants.EXCEPTION_LOAD_MAP
+import com.SavenkoProjects.srspu_nav.data.Constants.LEFT
+import com.SavenkoProjects.srspu_nav.data.Constants.NOT_AVAILABLE_DRAW_PATH
+import com.SavenkoProjects.srspu_nav.data.Constants.NOT_FOUND_ROUTE
+import com.SavenkoProjects.srspu_nav.data.Constants.NOT_FOUND_ROUTE_FIRST_FLOOR
+import com.SavenkoProjects.srspu_nav.data.Constants.ROUTE_MANAGER
+import com.SavenkoProjects.srspu_nav.data.Constants.STAIRS_LEFT
+import com.SavenkoProjects.srspu_nav.data.Constants.STAIRS_RIGHT
+import com.SavenkoProjects.srspu_nav.data.Constants.START_POSITION
 import com.SavenkoProjects.srspu_nav.data.Floor
 import com.SavenkoProjects.srspu_nav.data.SvgReader
 import com.SavenkoProjects.srspu_nav.databinding.ActivityRoutesBinding
@@ -31,7 +40,7 @@ data class RouteManager(
         buildingTag: String?
     ) {
         if (floorNumber == 1) {
-            val pathIds = pathFinder.findPath(firstFloor, "startPosition", endRoomId)
+            val pathIds = pathFinder.findPath(firstFloor, START_POSITION, endRoomId)
             val pathPoints = pathIds.mapNotNull {
                 pathDrawer.getPoint(
                     it, firstFloor.doors, firstFloor.hallways,
@@ -42,7 +51,7 @@ data class RouteManager(
                 pathDrawer.drawPath(firstFloorCanvas, pathPoints)
                 binding.floorMapImageView.setImageBitmap(firstFloorBitmap)
                 Toast.makeText(
-                    context, "Маршрут на 1 этаже не найден",
+                    context, NOT_FOUND_ROUTE_FIRST_FLOOR,
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -51,9 +60,9 @@ data class RouteManager(
             val endRoom = targetFloor.doors[endRoomId] ?: return
             val targetStaircase = staircaseFinder.findNearestStaircase(endRoom.position[0], targetFloor)
             val firstFloorStaircase =
-                if (targetStaircase.contains("left")) "stairs_left" else "stairs_right"
+                if (targetStaircase.contains(LEFT)) STAIRS_LEFT else STAIRS_RIGHT
             val firstFloorPath = pathFinder.findPath(
-                firstFloor, "startPosition",
+                firstFloor, START_POSITION,
                 firstFloorStaircase
             )
             val firstFloorPathPoints = firstFloorPath.mapNotNull {
@@ -70,10 +79,10 @@ data class RouteManager(
                 } else {
                     Toast.makeText(
                         context,
-                        "Маршрут на первом этаже не найден",
+                        NOT_FOUND_ROUTE_FIRST_FLOOR,
                         Toast.LENGTH_SHORT
                     ).show()
-                    Log.d("MapActivity", "buildingTag не найден")
+                    Log.d(ROUTE_MANAGER, "buildingTag не найден")
                 }
             }
         }
@@ -112,11 +121,11 @@ data class RouteManager(
                 pathDrawer.drawPath(floorCanvas, pathPoints)
                 binding.floorMapImageView.setImageBitmap(floorBitmap)
             } else {
-                Toast.makeText(context, "Маршрут не найден", Toast.LENGTH_SHORT).show()
-                Log.e("MapActivity", "Не удалось нарисовать путь на этаже ${floor.id}")
+                Toast.makeText(context, NOT_FOUND_ROUTE, Toast.LENGTH_SHORT).show()
+                Log.e(ROUTE_MANAGER, NOT_AVAILABLE_DRAW_PATH + floor.id)
             }
         } catch (e: IOException) {
-            Log.e("MapActivity", "Ошибка загрузки карты этажа", e)
+            Log.e(ROUTE_MANAGER, EXCEPTION_LOAD_MAP + e)
         }
     }
 }

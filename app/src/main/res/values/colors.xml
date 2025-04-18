@@ -7,4 +7,5 @@
     <color name="figma_background">#378EFF</color>
     <color name="figma_skin">#FFB3AD</color>
     <color name="figma_purple">#774CEA</color>
+    <color name="draw_path">#BFFF5151</color>
 </resources>

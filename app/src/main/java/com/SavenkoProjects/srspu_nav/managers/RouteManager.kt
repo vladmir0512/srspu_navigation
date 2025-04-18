@@ -7,13 +7,10 @@ import android.util.Log
 import android.widget.Toast
 import com.SavenkoProjects.srspu_nav.data.BuildingData
 import com.SavenkoProjects.srspu_nav.data.Constants.EXCEPTION_LOAD_MAP
-import com.SavenkoProjects.srspu_nav.data.Constants.LEFT
 import com.SavenkoProjects.srspu_nav.data.Constants.NOT_AVAILABLE_DRAW_PATH
 import com.SavenkoProjects.srspu_nav.data.Constants.NOT_FOUND_ROUTE
 import com.SavenkoProjects.srspu_nav.data.Constants.NOT_FOUND_ROUTE_FIRST_FLOOR
 import com.SavenkoProjects.srspu_nav.data.Constants.ROUTE_MANAGER
-import com.SavenkoProjects.srspu_nav.data.Constants.STAIRS_LEFT
-import com.SavenkoProjects.srspu_nav.data.Constants.STAIRS_RIGHT
 import com.SavenkoProjects.srspu_nav.data.Constants.START_POSITION
 import com.SavenkoProjects.srspu_nav.data.Floor
 import com.SavenkoProjects.srspu_nav.data.SvgReader
@@ -30,6 +27,7 @@ data class RouteManager(
     private val pathFinder = PathFinder()
     private val pathDrawer = PathDrawer()
     private val staircaseFinder = StaircaseFinder()
+
     fun drawRouteOnHigherFloor(
         currentBuilding: BuildingData,
         floorNumber: Int,
@@ -58,9 +56,17 @@ data class RouteManager(
         } else {
             val targetFloor = currentBuilding.floors.find { it.id == floorNumber } ?: return
             val endRoom = targetFloor.doors[endRoomId] ?: return
+            
+            // Находим ближайшую лестницу на целевом этаже
             val targetStaircase = staircaseFinder.findNearestStaircase(endRoom.position[0], targetFloor)
-            val firstFloorStaircase =
-                if (targetStaircase.contains(LEFT)) STAIRS_LEFT else STAIRS_RIGHT
+            
+            // Находим соответствующую лестницу на первом этаже
+            val firstFloorStaircase = staircaseFinder.findNearestStaircase(
+                firstFloor.hallways[targetStaircase]?.path?.get(0)?.get(0) ?: 0,
+                firstFloor
+            )
+
+            // Сначала строим путь от стартовой позиции до лестницы на первом этаже
             val firstFloorPath = pathFinder.findPath(
                 firstFloor, START_POSITION,
                 firstFloorStaircase
@@ -71,10 +77,12 @@ data class RouteManager(
                     firstFloor.startPosition
                 )
             }
+            
             if (firstFloorPathPoints.isNotEmpty()) {
                 if (buildingTag != null) {
                     pathDrawer.drawPath(firstFloorCanvas, firstFloorPathPoints)
                     binding.mapImageView.setImageBitmap(firstFloorBitmap)
+                    // Затем строим путь от лестницы до целевой аудитории на целевом этаже
                     drawHigherFloorRoute(buildingTag, targetFloor, targetStaircase, endRoomId)
                 } else {
                     Toast.makeText(
@@ -102,14 +110,16 @@ data class RouteManager(
 
             if (!floor.doors.containsKey(endRoomId)) {
                 Toast.makeText(context, "Маршрут не найден", Toast.LENGTH_SHORT).show()
-                Log.e("MapActivity", "Аудитория $endRoomId отсутствует на этаже ${floor.id}")
+                Log.e(ROUTE_MANAGER, "Аудитория $endRoomId отсутствует на этаже ${floor.id}")
                 return
             }
+            
+            // Строим путь от лестницы до целевой аудитории
             val pathIds = pathFinder.findPath(floor, staircase, endRoomId)
             if (pathIds.isEmpty()) {
                 Toast.makeText(context, "Маршрут не найден", Toast.LENGTH_SHORT).show()
                 Log.e(
-                    "MapActivity",
+                    ROUTE_MANAGER,
                     "Путь не найден на этаже ${floor.id} от $staircase до $endRoomId"
                 )
                 return
@@ -125,7 +135,7 @@ data class RouteManager(
                 Log.e(ROUTE_MANAGER, NOT_AVAILABLE_DRAW_PATH + floor.id)
             }
         } catch (e: IOException) {
-            Log.e(ROUTE_MANAGER, EXCEPTION_LOAD_MAP + e)
+            Log.e(ROUTE_MANAGER, EXCEPTION_LOAD_MAP, e)
         }
     }
 }

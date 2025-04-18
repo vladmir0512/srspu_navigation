@@ -29,7 +29,7 @@ data class Hallway(
 
 object Constants {
     const val BUILDING_ID = "building_id"
-    const val START_POSITION = "start_position"
+    const val START_POSITION = "startPosition"
     const val SEARCH_TEXT = "searchText"
     const val LEFT = "left"
     const val STAIR = "stair"
@@ -56,4 +56,5 @@ object Constants {
     const val ERROR_JSON = "Ошибка парсинга JSON: "
     const val UNEXPECTED_ERROR_JSON = "Непредвиденная ошибка при парсинге JSON: "
     const val INPUT_CORRECT_ROOM_NUMBER = "Непредвиденная ошибка при парсинге JSON: "
+    const val DRAW_PATH_COLOR = "#BFFF5151"
 }

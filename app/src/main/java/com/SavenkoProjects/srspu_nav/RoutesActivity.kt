@@ -26,26 +26,27 @@ class RoutesActivity : AppCompatActivity() {
 
 	private var isSearchVisible = false
 	private var isFirstState = true
-	private var buildingId by Delegates.notNull<Int>()
+	private var buildingId = 0
 	private var building: Building? = null
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		val json = loadJSONFromAsset().toString()
 
-		buildingId = 0
 		binding = ActivityRoutesBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 		initializeManagers()
 		setupUI()
+		loadMaps(json)
 
+	}
+
+	private fun loadMaps(json: String) {
 		binding.mapImageView.layoutParams as FrameLayout.LayoutParams
 		val paramsMainImageView =
 			binding.floorMapImageView.layoutParams as FrameLayout.LayoutParams
-		buildingId = 0
 		val searchText = intent.getStringExtra(SEARCH_TEXT).toString()
 		val floor = searchText[0].toString().toInt()
-		mapManager.resizeImageView(floor,paramsMainImageView)
+		mapManager.resizeImageView(floor, paramsMainImageView)
 		building = jsonReader.parseJson(json)
 		if (building != null) {
 			mapManager.drawMapWithRoute(
@@ -62,6 +63,7 @@ class RoutesActivity : AppCompatActivity() {
 		mapManager = MapManager(this, binding, buildingId)
 		jsonReader = JsonReader()
 	}
+
 	fun loadJSONFromAsset(): String? {
 		return try {
 			val filename: String = "building_data.json"
@@ -71,6 +73,7 @@ class RoutesActivity : AppCompatActivity() {
 			null
 		}
 	}
+
 	private fun setupUI() {
 		binding.searchButton.setOnClickListener {
 			animationManager.toggleSearchFieldAnimation(isSearchVisible)

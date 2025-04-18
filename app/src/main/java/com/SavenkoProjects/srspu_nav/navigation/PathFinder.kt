@@ -10,7 +10,7 @@ import com.SavenkoProjects.srspu_nav.data.Floor
 class PathFinder {
     fun findPath(floor: Floor, start: String, target: String): List<String> {
         Log.d(PATH_FINDER, "Поиск пути на этаже ${floor.id} от $start до $target")
-        
+
         val startExists = floor.connections.containsKey(start) ||
                 floor.doors.containsKey(start) ||
                 floor.hallways.containsKey(start) ||

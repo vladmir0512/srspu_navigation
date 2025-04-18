@@ -564,7 +564,7 @@
             }
           },
           "hallways": {
-            "stairs_left_lk2": {
+            "stairs_left": {
               "path": [
                 [
                   590,
@@ -572,7 +572,7 @@
                 ]
               ]
             },
-            "stairs_right_lk2": {
+            "stairs_right": {
               "path": [
                 [
                   2720,
@@ -791,7 +791,6 @@
           },
           "connections": {
             "HSL": [
-              "stairs_left_lk2",
               "H205",
               "H207А",
               "H207",
@@ -818,7 +817,6 @@
               "H225"
             ],
             "HSR": [
-              "stairs_right_lk2",
               "H205",
               "H207А",
               "H207",
@@ -915,10 +913,10 @@
             "H202А": [
               "202А"
             ],
-            "stairs_right_lk2": [
+            "stairs_right": [
               "HSR"
             ],
-            "stairs_left_lk2": [
+            "stairs_left": [
               "HSL"
             ]
           }
@@ -1066,7 +1064,7 @@
             }
           },
           "hallways": {
-            "stairs_left_lk3": {
+            "stairs_left": {
               "path": [
                 [
                   1127,
@@ -1074,7 +1072,7 @@
                 ]
               ]
             },
-            "stairs_right_lk3": {
+            "stairs_right": {
               "path": [
                 [
                   3399,
@@ -1285,7 +1283,6 @@
           },
           "connections": {
             "HSL": [
-              "stairs_left_lk3",
               "H301",
               "H305",
               "H307",
@@ -1311,7 +1308,6 @@
               "H302"
             ],
             "HSR": [
-              "stairs_left_lk4",
               "H301",
               "H305",
               "H307",
@@ -1405,10 +1401,10 @@
             "H302": [
               "302"
             ],
-            "stairs_right_lk3": [
+            "stairs_right": [
               "HSR"
             ],
-            "stairs_left_lk3": [
+            "stairs_left": [
               "HSL"
             ]
           }
@@ -1580,7 +1576,7 @@
             }
           },
           "hallways": {
-            "stairs_left_lk4": {
+            "stairs_left": {
               "path": [
                 [
                   1029,
@@ -1588,7 +1584,7 @@
                 ]
               ]
             },
-            "stairs_right_lk4": {
+            "stairs_right": {
               "path": [
                 [
                   3266,
@@ -1831,7 +1827,7 @@
           },
           "connections": {
             "HSL": [
-              "stairs_left_lk4",
+              "stairs_left",
               "H401",
               "H402",
               "H403",
@@ -1863,7 +1859,7 @@
               "H428"
             ],
             "HSR": [
-              "stairs_left_lk4",
+              "stairs_right",
               "H401",
               "H402",
               "H403",
@@ -1985,10 +1981,10 @@
             "H428": [
               "428"
             ],
-            "stairs_right_lk4": [
+            "stairs_right": [
               "HSR"
             ],
-            "stairs_left_lk4": [
+            "stairs_left": [
               "HSL"
             ]
           }
@@ -2822,7 +2818,7 @@
             }
           },
           "hallways": {
-            "stairs_left_lk2": {
+            "stairs_left": {
               "path": [
                 [
                   950,
@@ -2830,7 +2826,7 @@
                 ]
               ]
             },
-            "stairs_right_lk2": {
+            "stairs_right": {
               "path": [
                 [
                   3108,
@@ -3049,7 +3045,7 @@
           },
           "connections": {
             "HSL": [
-              "stairs_left_lk2",
+              "stairs_left",
               "H205",
               "H207А",
               "H207",
@@ -3075,7 +3071,7 @@
               "H202А"
             ],
             "HSR": [
-              "stairs_right_lk2",
+              "stairs_right",
               "H205",
               "H207А",
               "H207",
@@ -3324,7 +3320,7 @@
             }
           },
           "hallways": {
-            "stairs_left_lk3": {
+            "stairs_left": {
               "path": [
                 [
                   1147,
@@ -3332,7 +3328,7 @@
                 ]
               ]
             },
-            "stairs_right_lk3": {
+            "stairs_right": {
               "path": [
                 [
                   3424,
@@ -3567,7 +3563,7 @@
           },
           "connections": {
             "HSL": [
-              "stairs_left_lk3",
+              "stairs_left",
               "H301",
               "H302",
               "H303",
@@ -3596,7 +3592,7 @@
               "H326"
             ],
             "HSR": [
-              "stairs_left_lk4",
+              "stairs_right",
               "H301",
               "H302",
               "H303",
@@ -7467,7 +7463,6 @@
           },
           "connections": {
             "HSL": [
-              "stairs_left_lk2",
               "H201",
               "H202",
               "H203",
@@ -7497,7 +7492,6 @@
               "H227"
             ],
             "HSR": [
-              "stairs_left_lk2",
               "H201",
               "H202",
               "H203",
@@ -7607,10 +7601,10 @@
             "H227": [
               "227"
             ],
-            "stairs_right_lk2": [
+            "stairs_right": [
               "HSR"
             ],
-            "stairs_left_lk2": [
+            "stairs_left": [
               "HSL"
             ]
           }
@@ -7780,7 +7774,7 @@
             }
           },
           "hallways": {
-            "stairs_left_lk3": {
+            "stairs_left": {
               "path": [
                 [
                   1147,
@@ -7788,7 +7782,7 @@
                 ]
               ]
             },
-            "stairs_right_lk3": {
+            "stairs_right": {
               "path": [
                 [
                   3424,
@@ -8023,7 +8017,6 @@
           },
           "connections": {
             "HSL": [
-              "stairs_left_lk3",
               "H301",
               "H302",
               "H303",
@@ -8052,7 +8045,6 @@
               "H326"
             ],
             "HSR": [
-              "stairs_left_lk4",
               "H301",
               "H302",
               "H303",
@@ -8158,10 +8150,10 @@
             "H326": [
               "326"
             ],
-            "stairs_right_lk3": [
+            "stairs_right": [
               "HSR"
             ],
-            "stairs_left_lk3": [
+            "stairs_left": [
               "HSL"
             ]
           }
@@ -8343,7 +8335,7 @@
             }
           },
           "hallways": {
-            "stairs_left_lk4": {
+            "stairs_left": {
               "path": [
                 [
                   1050,
@@ -8351,7 +8343,7 @@
                 ]
               ]
             },
-            "stairs_right_lk4": {
+            "stairs_right": {
               "path": [
                 [
                   3384,
@@ -8602,7 +8594,6 @@
           },
           "connections": {
             "HSL": [
-              "stairs_left_lk4",
               "H401",
               "H402",
               "H403",
@@ -8633,7 +8624,6 @@
               "H428"
             ],
             "HSR": [
-              "stairs_left_lk4",
               "H401",
               "H402",
               "H403",
@@ -8747,10 +8737,10 @@
             "H428": [
               "428"
             ],
-            "stairs_right_lk4": [
+            "stairs_right": [
               "HSR"
             ],
-            "stairs_left_lk4": [
+            "stairs_left": [
               "HSL"
             ]
           }
@@ -8900,167 +8890,167 @@
                 ]
               ]
             },
-              "stairs_right": {
-                "path": [
-                  [
-                    2860,
-                    2012
-                  ]
+            "stairs_right": {
+              "path": [
+                [
+                  2860,
+                  2012
                 ]
-              },
-              "HSR": {
-                "path": [
-                  [
-                    3069,
-                    2012
-                  ]
-                ]
-              },
-              "H101": {
-                "path": [
-                  [
-                    1209,
-                    3320
-                  ]
-                ]
-              },
-              "H103": {
-                "path": [
-                  [
-                    1209,
-                    2850
-                  ]
-                ]
-              },
-              "H104": {
-                "path": [
-                  [
-                    1411,
-                    2850
-                  ]
-                ]
-              },
-              "H105": {
-                "path": [
-                  [
-                    1342,
-                    2850
-                  ]
-                ]
-              },
-              "H106": {
-                "path": [
-                  [
-                    1672,
-                    2850
-                  ]
-                ]
-              },
-              "H107": {
-                "path": [
-                  [
-                    2008,
-                    2850
-                  ]
-                ]
-              },
-              "H108": {
-                "path": [
-                  [
-                    2037,
-                    2850
-                  ]
-                ]
-              },
-              "H109": {
-                "path": [
-                  [
-                    2275,
-                    2850
-                  ]
-                ]
-              },
-              "H110": {
-                "path": [
-                  [
-                    2199,
-                    2850
-                  ]
-                ]
-              },
-              "H111": {
-                "path": [
-                  [
-                    2755,
-                    2850
-                  ]
-                ]
-              },
-              "H112": {
-                "path": [
-                  [
-                    2414,
-                    2850
-                  ]
-                ]
-              },
-              "H113": {
-                "path": [
-                  [
-                    3064,
-                    2850
-                  ]
-                ]
-              },
-              "H114": {
-                "path": [
-                  [
-                    3069,
-                    2580
-                  ]
-                ]
-              },
-              "H115": {
-                "path": [
-                  [
-                    3069,
-                    2400
-                  ]
-                ]
-              },
-              "H117": {
-                "path": [
-                  [
-                    3263,
-                    1412
-                  ]
-                ]
-              },
-              "H118": {
-                "path": [
-                  [
-                    3263,
-                    1629
-                  ]
-                ]
-              },
-              "H120": {
-                "path": [
-                  [
-                    3263,
-                    1405
-                  ]
-                ]
-              },
-              "H121": {
-                "path": [
-                  [
-                    3263,
-                    1225
-                  ]
-                ]
-              }
+              ]
             },
+            "HSR": {
+              "path": [
+                [
+                  3069,
+                  2012
+                ]
+              ]
+            },
+            "H101": {
+              "path": [
+                [
+                  1209,
+                  3320
+                ]
+              ]
+            },
+            "H103": {
+              "path": [
+                [
+                  1209,
+                  2850
+                ]
+              ]
+            },
+            "H104": {
+              "path": [
+                [
+                  1411,
+                  2850
+                ]
+              ]
+            },
+            "H105": {
+              "path": [
+                [
+                  1342,
+                  2850
+                ]
+              ]
+            },
+            "H106": {
+              "path": [
+                [
+                  1672,
+                  2850
+                ]
+              ]
+            },
+            "H107": {
+              "path": [
+                [
+                  2008,
+                  2850
+                ]
+              ]
+            },
+            "H108": {
+              "path": [
+                [
+                  2037,
+                  2850
+                ]
+              ]
+            },
+            "H109": {
+              "path": [
+                [
+                  2275,
+                  2850
+                ]
+              ]
+            },
+            "H110": {
+              "path": [
+                [
+                  2199,
+                  2850
+                ]
+              ]
+            },
+            "H111": {
+              "path": [
+                [
+                  2755,
+                  2850
+                ]
+              ]
+            },
+            "H112": {
+              "path": [
+                [
+                  2414,
+                  2850
+                ]
+              ]
+            },
+            "H113": {
+              "path": [
+                [
+                  3064,
+                  2850
+                ]
+              ]
+            },
+            "H114": {
+              "path": [
+                [
+                  3069,
+                  2580
+                ]
+              ]
+            },
+            "H115": {
+              "path": [
+                [
+                  3069,
+                  2400
+                ]
+              ]
+            },
+            "H117": {
+              "path": [
+                [
+                  3263,
+                  1412
+                ]
+              ]
+            },
+            "H118": {
+              "path": [
+                [
+                  3263,
+                  1629
+                ]
+              ]
+            },
+            "H120": {
+              "path": [
+                [
+                  3263,
+                  1405
+                ]
+              ]
+            },
+            "H121": {
+              "path": [
+                [
+                  3263,
+                  1225
+                ]
+              ]
+            }
+          },
             "connections": {
               "startPosition": [
                 "H1"

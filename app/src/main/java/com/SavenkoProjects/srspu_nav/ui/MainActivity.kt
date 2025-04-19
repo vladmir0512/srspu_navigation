@@ -1,4 +1,4 @@
-package com.SavenkoProjects.srspu_nav
+package com.SavenkoProjects.srspu_nav.ui
 
 import android.content.Intent
 import android.os.Bundle

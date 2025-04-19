@@ -1,20 +1,18 @@
-package com.SavenkoProjects.srspu_nav
+package com.SavenkoProjects.srspu_nav.ui
 
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.SavenkoProjects.srspu_nav.data.Building
-import com.SavenkoProjects.srspu_nav.data.Constants.SEARCH_TEXT
 import com.SavenkoProjects.srspu_nav.data.Constants.EXCEPTION_LOAD_JSON
+import com.SavenkoProjects.srspu_nav.data.Constants.SEARCH_TEXT
 import com.SavenkoProjects.srspu_nav.data.JsonReader
 import com.SavenkoProjects.srspu_nav.data.SvgReader
 import com.SavenkoProjects.srspu_nav.databinding.ActivityRoutesBinding
 import com.SavenkoProjects.srspu_nav.managers.MapManager
 import com.SavenkoProjects.srspu_nav.utils.AnimationManager
 import java.io.IOException
-import java.io.InputStream
-import kotlin.properties.Delegates
 
 
 class RoutesActivity : AppCompatActivity() {
@@ -26,7 +24,7 @@ class RoutesActivity : AppCompatActivity() {
 
 	private var isSearchVisible = false
 	private var isFirstState = true
-	private var buildingId = 0
+	private var buildingId = 6
 	private var building: Building? = null
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)

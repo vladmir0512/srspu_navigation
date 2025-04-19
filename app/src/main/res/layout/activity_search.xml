@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/figma_background"
     android:id="@+id/activity_search"
-    tools:context=".SearchActivity">
+    tools:context=".ui.SearchActivity">
 
     <!-- Иллюстрация -->
 

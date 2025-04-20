@@ -7,6 +7,7 @@ android {
     namespace = "com.SavenkoProjects.srspu_nav"
     compileSdk = 35
 
+
     defaultConfig {
         applicationId = "com.SavenkoProjects.srspu_nav"
         minSdk = 24

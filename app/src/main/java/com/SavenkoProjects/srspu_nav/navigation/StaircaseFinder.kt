@@ -5,9 +5,10 @@ import com.SavenkoProjects.srspu_nav.data.Constants.STAIR
 import com.SavenkoProjects.srspu_nav.data.Constants.STAIRCASE_FINDER
 import com.SavenkoProjects.srspu_nav.data.Constants.STAIRS
 import com.SavenkoProjects.srspu_nav.data.Floor
+import kotlin.math.sqrt
 
 class StaircaseFinder {
-    fun findNearestStaircase(x: Int, floor: Floor): String {
+    fun findNearestStaircase(x: Int, y: Int, floor: Floor): String {
         // Находим все лестницы на этаже
         val staircases = floor.hallways.filter { (key, _) ->
             key.contains(STAIRS, ignoreCase = true) ||
@@ -29,11 +30,13 @@ class StaircaseFinder {
 
         // Находим ближайшую лестницу
         var nearestStaircaseId = ""
-        var minDistance = Int.MAX_VALUE
+        var minDistance = Double.MAX_VALUE
 
         for ((staircaseId, hallway) in staircases) {
             val staircasePoint = hallway.path[0]
-            val distance = kotlin.math.abs(x - staircasePoint[0])
+            val dx = x - staircasePoint[0]
+            val dy = y - staircasePoint[1]
+            val distance = sqrt((dx * dx + dy * dy).toDouble())
             if (distance < minDistance) {
                 minDistance = distance
                 nearestStaircaseId = staircaseId

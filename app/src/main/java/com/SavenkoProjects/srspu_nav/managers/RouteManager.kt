@@ -58,11 +58,13 @@ data class RouteManager(
             val endRoom = targetFloor.doors[endRoomId] ?: return
             
             // Находим ближайшую лестницу на целевом этаже
-            val targetStaircase = staircaseFinder.findNearestStaircase(endRoom.position[0], targetFloor)
+            val targetStaircase = staircaseFinder.findNearestStaircase(endRoom.position[0],endRoom.position[1], targetFloor)
             
             // Находим соответствующую лестницу на первом этаже
             val firstFloorStaircase = staircaseFinder.findNearestStaircase(
                 firstFloor.hallways[targetStaircase]?.path?.get(0)?.get(0) ?: 0,
+                firstFloor.hallways[targetStaircase]?.path?.get(0)?.get(1) ?: 0,
+
                 firstFloor
             )
 

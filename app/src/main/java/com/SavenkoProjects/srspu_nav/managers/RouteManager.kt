@@ -20,7 +20,7 @@ import com.SavenkoProjects.srspu_nav.navigation.PathFinder
 import com.SavenkoProjects.srspu_nav.navigation.StaircaseFinder
 import java.io.IOException
 
-data class RouteManager(
+class RouteManager(
 	private val context: Context,
 	private val binding: ActivityRoutesBinding,
 ) {

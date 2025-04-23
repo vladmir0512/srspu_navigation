@@ -9,7 +9,6 @@ import kotlin.math.sqrt
 
 class StaircaseFinder {
     fun findNearestStaircase(x: Int, y: Int, floor: Floor): String {
-        // Находим все лестницы на этаже
         val staircases = floor.hallways.filter { (key, _) ->
             key.contains(STAIRS, ignoreCase = true) ||
             key.contains(STAIR, ignoreCase = true)
@@ -28,7 +27,6 @@ class StaircaseFinder {
             }
         }
 
-        // Находим ближайшую лестницу
         var nearestStaircaseId = ""
         var minDistance = Double.MAX_VALUE
 

@@ -6,6 +6,7 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.SavenkoProjects.srspu_nav.data.Building
 import com.SavenkoProjects.srspu_nav.data.Constants.EXCEPTION_LOAD_JSON
+import com.SavenkoProjects.srspu_nav.data.Constants.JSON_READER
 import com.SavenkoProjects.srspu_nav.data.Constants.SEARCH_TEXT
 import com.SavenkoProjects.srspu_nav.data.JsonReader
 import com.SavenkoProjects.srspu_nav.data.SvgReader
@@ -24,7 +25,7 @@ class RoutesActivity : AppCompatActivity() {
 
 	private var isSearchVisible = false
 	private var isFirstState = true
-	private var buildingId = 6
+	private var buildingId = 1
 	private var building: Building? = null
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -67,7 +68,7 @@ class RoutesActivity : AppCompatActivity() {
 			val filename: String = "building_data.json"
 			assets.open(filename).bufferedReader().use { it.readText() }
 		} catch (ex: IOException) {
-			Log.e("JsonReader", EXCEPTION_LOAD_JSON + ex.message)
+			Log.e(JSON_READER, EXCEPTION_LOAD_JSON + ex.message)
 			null
 		}
 	}

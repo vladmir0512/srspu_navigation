@@ -3,11 +3,12 @@
   <component name="JsonSchemaMappingsProjectConfiguration">
     <state>
       <map>
-        <entry key="Doki Jetbrains Templates">
+        <entry key="JSON Schema 7">
           <value>
             <SchemaInfo>
-              <option name="name" value="Doki Jetbrains Templates" />
-              <option name="relativePathToSchema" value="jar://$APPLICATION_PLUGINS_DIR$/doki-theme-jetbrains/lib/instrumented-doki-theme-jetbrains-88.5-1.14.1.jar!/theme-schema/jetbrains.theme.schema.json" />
+              <option name="name" value="JSON Schema 7" />
+              <option name="relativePathToSchema" value="http://json-schema.org/draft-07/schema" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="applicationDefined" value="true" />
               <option name="patterns">
                 <list>

@@ -52,7 +52,7 @@ class SearchActivity : AppCompatActivity() {
 
 	/** Проверяем с помощью [Regex], что [searchText] содержит ровно 3 цифры в начале, может содержать только символ 'А'  */
 	private fun validateSearchText(searchText: String): Boolean {
-		val regex = Regex("^\\d{3}[А,Б]?$")
+		val regex = Regex("^\\d{3}[АБВГК]?$")
 		return searchText.matches(regex)
 	}
 

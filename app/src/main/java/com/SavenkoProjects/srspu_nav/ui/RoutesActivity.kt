@@ -25,7 +25,7 @@ class RoutesActivity : AppCompatActivity() {
 
 	private var isSearchVisible = false
 	private var isFirstState = true
-	private var buildingId = 1
+	private var buildingId = 2
 	private var building: Building? = null
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)

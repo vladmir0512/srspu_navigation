@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Карта ЮРГПУ (НПИ)</title>
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        .map-container {
+          position: relative;
+          width: 100%;
+          height: auto;
+        }
+        .map-container img {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+        .area {
+          position: absolute;
+          border: 2px solid rgba(255, 0, 0, 0.3);
+        }
+        .clickable {
+          cursor: pointer;
+        }
+
+        /* Пример координат: подставлены примерно */
+        #main-building {
+          top: 61.5%;
+          left: 42%;
+          width: 21%;
+          height: 15%;
+        }
+
+        #him {
+          top: 44%;
+          left: 24%;
+          width: 9.5%;
+          height: 15.9%;
+        }
+
+        #rt {
+          top: 63.5%;
+          left: 23.5%;
+          width: 10.5%;
+          height: 15%;
+        }
+
+        #gg {
+          top: 23.2%;
+          left: 24%;
+          width: 7.6%;
+          height: 11.2%;
+        }
+
+        #ubk {
+          top: 20%;
+          left: 40.6%;
+          width: 24%;
+          height: 8%;
+        }
+
+        #en {
+          top: 29.5%;
+          left: 40.6%;
+          width: 24%;
+          height: 11.7%;
+        }
+
+        #lk {
+          top: 20%;
+          left: 67.6%;
+          width: 17%;
+          height: 3.7%;
+        }
+
+        /* Добавляйте остальные корпуса по аналогии */
+    </style>
+</head>
+<body>
+<div class="map-container">
+    <img src="karta.jpg" alt="Карта ЮРГПУ НПИ">
+
+    <div id="main-building" class="area clickable" onclick="onAreaClick('Главный корпус')"></div>
+    <div id="him" class="area clickable" onclick="onAreaClick('Технологический корпус')"></div>
+    <div id="rt" class="area clickable" onclick="onAreaClick('Робототехнический корпус')"></div>
+    <div id="gg" class="area clickable" onclick="onAreaClick('Горно-геологический корпус')"></div>
+    <div id="ubk" class="area clickable" onclick="onAreaClick('Учебно-библиотечный корпус')"></div>
+    <div id="en" class="area clickable" onclick="onAreaClick('Энергетический корпус')"></div>
+    <div id="lk" class="area clickable" onclick="onAreaClick('Лабораторный корпус')"></div>
+    <!-- Добавьте остальные корпуса по аналогии -->
+</div>
+
+<script>
+    function onAreaClick(name) {
+        Android.showToast("Вы нажали на: " + name);
+
+<!--      alert('Вы нажали на: ' + name);-->
+    }
+</script>
+</body>
+</html>

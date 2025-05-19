@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import com.SavenkoProjects.srspu_nav.data.Constants.BUILDING_ID
 import com.SavenkoProjects.srspu_nav.data.Constants.INPUT_CORRECT_ROOM_NUMBER
 import com.SavenkoProjects.srspu_nav.data.Constants.SEARCH_TEXT
 import com.SavenkoProjects.srspu_nav.databinding.ActivitySearchBinding
@@ -38,16 +37,12 @@ class SearchActivity : AppCompatActivity() {
 			} else {
 				editTextSearch.error = INPUT_CORRECT_ROOM_NUMBER
 			}
-
-			mapButton.setOnClickListener {
-				val buildingId = intent.getStringExtra(BUILDING_ID)
-				val intent = Intent(this, CampusActivity::class.java).apply {
-					putExtra(BUILDING_ID, buildingId)
-				}
-
-				startActivity(intent)
-			}
 		}
+		mapButton.setOnClickListener {
+			val intent = Intent(this, CampusActivity::class.java)
+			startActivity(intent)
+		}
+
 	}
 
 	/** Проверяем с помощью [Regex], что [searchText] содержит ровно 3 цифры в начале, может содержать только символ 'А'  */

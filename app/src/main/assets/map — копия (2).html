@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Карта ЮРГПУ (НПИ)</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .map-container {
+      position: relative;
+      width: 100%;
+      height: auto;
+    }
+
+    .map-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .area {
+      position: absolute;
+      border: 2px solid rgba(255, 0, 0, 0.3);
+    }
+
+    .clickable {
+      cursor: pointer;
+    }
+
+    .svg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* Разметка зданий */
+    #main-building {
+      top: 61.5%;
+      left: 42%;
+      width: 21%;
+      height: 15%;
+    }
+
+    #him {
+      top: 44%;
+      left: 24%;
+      width: 9.5%;
+      height: 15.9%;
+    }
+
+    #rt {
+      top: 63.5%;
+      left: 23.5%;
+      width: 10.5%;
+      height: 15%;
+    }
+
+    #gg {
+      top: 23.2%;
+      left: 24%;
+      width: 7.6%;
+      height: 11.2%;
+    }
+
+    #ubk {
+      top: 20%;
+      left: 40.6%;
+      width: 24%;
+      height: 8%;
+    }
+
+    #en {
+      top: 29.5%;
+      left: 40.6%;
+      width: 24%;
+      height: 11.7%;
+    }
+
+    #lk {
+      top: 20%;
+      left: 67.6%;
+      width: 17%;
+      height: 3.7%;
+    }
+
+    /* Добавьте дополнительные корпуса при необходимости */
+  </style>
+</head>
+<body>
+  <div class="map-container">
+    <img src="karta.jpg" alt="Карта ЮРГПУ НПИ">
+    <svg id="route-layer" class="svg-overlay"></svg>
+
+    <div id="main-building" class="area clickable" onclick="onAreaClick('Главный корпус')"></div>
+    <div id="him" class="area clickable" onclick="onAreaClick('Технологический корпус')"></div>
+    <div id="rt" class="area clickable" onclick="onAreaClick('Робототехнический корпус')"></div>
+    <div id="gg" class="area clickable" onclick="onAreaClick('Горно-геологический корпус')"></div>
+    <div id="ubk" class="area clickable" onclick="onAreaClick('Учебно-библиотечный корпус')"></div>
+    <div id="en" class="area clickable" onclick="onAreaClick('Энергетический корпус')"></div>
+    <div id="lk" class="area clickable" onclick="onAreaClick('Лабораторный корпус')"></div>
+  </div>
+
+  <script>
+    const coordinates = {
+      'Главный корпус': { x: 52.5, y: 69 },
+      'Технологический корпус': { x: 28.5, y: 51.5 },
+      'Робототехнический корпус': { x: 29, y: 70.5 },
+      'Горно-геологический корпус': { x: 27.8, y: 28.8 },
+      'Учебно-библиотечный корпус': { x: 52, y: 25 },
+      'Энергетический корпус': { x: 52, y: 37 },
+      'Лабораторный корпус': { x: 76, y: 24 },
+    };
+
+    let pointA = null;
+    let pointB = null;
+
+    function onAreaClick(name) {
+      if (!pointA) {
+        pointA = name;
+        Android.showToast("Точка A: " + name);
+      } else if (!pointB) {
+        pointB = name;
+        Android.showToast("Точка B: " + name);
+        drawRoute(pointA, pointB);
+      } else {
+        clearRoute();
+        pointA = name;
+        pointB = null;
+        Android.showToast("Новая точка A: " + name);
+      }
+    }
+
+    function drawRoute(fromName, toName) {
+      const svg = document.getElementById("route-layer");
+      const from = coordinates[fromName];
+      const to = coordinates[toName];
+
+      if (!from || !to) return;
+
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", from.x + "%");
+      line.setAttribute("y1", from.y + "%");
+      line.setAttribute("x2", to.x + "%");
+      line.setAttribute("y2", to.y + "%");
+      line.setAttribute("stroke", "red");
+      line.setAttribute("stroke-width", "4");
+      line.setAttribute("stroke-linecap", "round");
+
+      svg.appendChild(line);
+    }
+
+    function clearRoute() {
+      document.getElementById("route-layer").innerHTML = "";
+    }
+  </script>
+</body>
+</html>

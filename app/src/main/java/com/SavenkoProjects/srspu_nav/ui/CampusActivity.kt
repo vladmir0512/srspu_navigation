@@ -1,11 +1,13 @@
 package com.SavenkoProjects.srspu_nav.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.SavenkoProjects.srspu_nav.databinding.ActivityCampusBinding
+import com.SavenkoProjects.srspu_nav.data.Constants.BUILDING_ID
 
 class CampusActivity : AppCompatActivity() {
 
@@ -14,7 +16,16 @@ class CampusActivity : AppCompatActivity() {
 		fun showToast(message: String) {
 			Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 		}
+
+		@JavascriptInterface
+		fun openSearchActivity(buildingId: String) {
+			val intent = Intent(context, SearchActivity::class.java).apply {
+				putExtra(BUILDING_ID, buildingId)
+			}
+			startActivity(intent)
+		}
 	}
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		val binding = ActivityCampusBinding.inflate(layoutInflater)
@@ -29,8 +40,5 @@ class CampusActivity : AppCompatActivity() {
 		webView.loadUrl("file:///android_asset/map.html")
 		webView.settings.builtInZoomControls = true
 		webView.settings.displayZoomControls = true
-
-
 	}
-
 }

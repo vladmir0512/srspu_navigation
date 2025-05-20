@@ -4,12 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.util.Log
-import android.widget.Toast
 import com.SavenkoProjects.srspu_nav.data.BuildingData
 import com.SavenkoProjects.srspu_nav.data.Constants.EXCEPTION_LOAD_MAP
 import com.SavenkoProjects.srspu_nav.data.Constants.NOT_AVAILABLE_DRAW_PATH
-import com.SavenkoProjects.srspu_nav.data.Constants.NOT_FOUND_ROUTE
-import com.SavenkoProjects.srspu_nav.data.Constants.NOT_FOUND_ROUTE_FIRST_FLOOR
 import com.SavenkoProjects.srspu_nav.data.Constants.ROUTE_MANAGER
 import com.SavenkoProjects.srspu_nav.data.Constants.START_POSITION
 import com.SavenkoProjects.srspu_nav.data.Floor
@@ -48,10 +45,7 @@ class RouteManager(
 			if (pathPoints.isNotEmpty()) {
 				pathDrawer.drawPath(firstFloorCanvas, pathPoints)
 				binding.floorMapImageView.setImageBitmap(firstFloorBitmap)
-				Toast.makeText(
-					context, NOT_FOUND_ROUTE_FIRST_FLOOR,
-					Toast.LENGTH_SHORT
-				).show()
+
 			}
 		} else {
 			val targetFloor = currentBuilding.floors.find { it.id == floorNumber } ?: return
@@ -90,11 +84,6 @@ class RouteManager(
 					// Затем строим путь от лестницы до целевой аудитории на целевом этаже
 					drawHigherFloorRoute(buildingTag, targetFloor, targetStaircase, endRoomId)
 				} else {
-					Toast.makeText(
-						context,
-						NOT_FOUND_ROUTE_FIRST_FLOOR,
-						Toast.LENGTH_SHORT
-					).show()
 					Log.d(ROUTE_MANAGER, "buildingTag не найден")
 				}
 			}

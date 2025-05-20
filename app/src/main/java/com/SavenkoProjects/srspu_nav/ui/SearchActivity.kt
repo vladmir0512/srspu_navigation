@@ -3,8 +3,9 @@ package com.SavenkoProjects.srspu_nav.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.SavenkoProjects.srspu_nav.data.BuildingConfig
@@ -15,7 +16,7 @@ import com.SavenkoProjects.srspu_nav.databinding.ActivitySearchBinding
 import com.SavenkoProjects.srspu_nav.utils.IntentConstants.EXTRA_BUILDING_ID
 
 class SearchActivity : AppCompatActivity() {
-	private lateinit var editTextSearch: EditText
+	private lateinit var editTextSearch: AutoCompleteTextView
 	private lateinit var searchButton: Button
 	private lateinit var mapButton: Button
 	private lateinit var roomManager: RoomManager
@@ -34,7 +35,22 @@ class SearchActivity : AppCompatActivity() {
 		currentBuildingId = intent.getStringExtra(EXTRA_BUILDING_ID) ?: "6"
 		Log.d("SearchActivity", "Received building ID: $currentBuildingId")
 		
+		setupAutoComplete()
 		setOnClickListeners()
+	}
+
+	private fun setupAutoComplete() {
+		val suggestions = generateRoomSuggestions()
+		val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, suggestions)
+		editTextSearch.setAdapter(adapter)
+		editTextSearch.threshold = 1 // Начинаем показывать подсказки после ввода 1 символа
+	}
+
+	private fun generateRoomSuggestions(): List<String> {
+		return roomManager.getRoomsForBuilding(currentBuildingId)
+			.toList()
+			.sortedWith(compareBy<String> { it.length }
+				.thenBy { it })
 	}
 
 	private fun setOnClickListeners() {

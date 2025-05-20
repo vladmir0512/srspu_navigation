@@ -12,6 +12,6 @@
 /captures
 .externalNativeBuild
 .cxx
-.hprof
+*.hprof
 local.properties
 .qodo

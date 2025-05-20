@@ -3,6 +3,7 @@ package com.SavenkoProjects.srspu_nav.ui
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.SavenkoProjects.srspu_nav.data.Building
 import com.SavenkoProjects.srspu_nav.data.Constants.EXCEPTION_LOAD_JSON
@@ -13,6 +14,7 @@ import com.SavenkoProjects.srspu_nav.data.SvgReader
 import com.SavenkoProjects.srspu_nav.databinding.ActivityRoutesBinding
 import com.SavenkoProjects.srspu_nav.managers.MapManager
 import com.SavenkoProjects.srspu_nav.utils.AnimationManager
+import com.SavenkoProjects.srspu_nav.utils.IntentConstants.EXTRA_BUILDING_ID
 import java.io.IOException
 
 
@@ -22,10 +24,9 @@ class RoutesActivity : AppCompatActivity() {
 	private lateinit var animationManager: AnimationManager
 	private lateinit var jsonReader: JsonReader
 	private lateinit var svgReader: SvgReader
-
+	private var buildingId: Int = 6
 	private var isSearchVisible = false
 	private var isFirstState = true
-	private var buildingId = 0
 	private var building: Building? = null
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -33,6 +34,14 @@ class RoutesActivity : AppCompatActivity() {
 
 		binding = ActivityRoutesBinding.inflate(layoutInflater)
 		setContentView(binding.root)
+		
+		// Получаем buildingId из Intent
+		val receivedBuildingId = intent.getStringExtra(EXTRA_BUILDING_ID)
+		buildingId = receivedBuildingId?.toIntOrNull() ?: run {
+			Toast.makeText(this, "Ошибка: неверный формат номера здания", Toast.LENGTH_LONG).show()
+			6
+		}
+		
 		initializeManagers()
 		setupUI()
 		loadMaps(json)

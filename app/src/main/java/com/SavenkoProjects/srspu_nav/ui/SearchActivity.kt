@@ -7,19 +7,19 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.SavenkoProjects.srspu_nav.data.BuildingConfig
 import com.SavenkoProjects.srspu_nav.data.Constants.INPUT_CORRECT_ROOM_NUMBER
 import com.SavenkoProjects.srspu_nav.data.Constants.SEARCH_TEXT
-import com.SavenkoProjects.srspu_nav.data.Constants.BUILDING_ID
-import com.SavenkoProjects.srspu_nav.databinding.ActivitySearchBinding
 import com.SavenkoProjects.srspu_nav.data.RoomManager
-import com.SavenkoProjects.srspu_nav.data.BuildingConfig
+import com.SavenkoProjects.srspu_nav.databinding.ActivitySearchBinding
+import com.SavenkoProjects.srspu_nav.utils.IntentConstants.EXTRA_BUILDING_ID
 
 class SearchActivity : AppCompatActivity() {
 	private lateinit var editTextSearch: EditText
 	private lateinit var searchButton: Button
 	private lateinit var mapButton: Button
 	private lateinit var roomManager: RoomManager
-	private var currentBuildingId: String = "0" // По умолчанию ЛК
+	private lateinit var currentBuildingId: String
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -30,19 +30,10 @@ class SearchActivity : AppCompatActivity() {
 		mapButton = binding.mapButton
 		roomManager = RoomManager()
 		
-		// Получаем buildingId из Intent, если он был передан
-		val receivedBuildingId = intent.getStringExtra(BUILDING_ID)
-		Log.d("SearchActivity", "Received building ID: $receivedBuildingId")
+		// Получаем buildingId из Intent
+		currentBuildingId = intent.getStringExtra(EXTRA_BUILDING_ID) ?: "6"
+		Log.d("SearchActivity", "Received building ID: $currentBuildingId")
 		
-		// Проверяем, что buildingId валидный (от 0 до 7)
-		currentBuildingId = if (receivedBuildingId != null && receivedBuildingId in "0".."7") {
-			receivedBuildingId
-		} else {
-			Log.w("SearchActivity", "Invalid building ID received: $receivedBuildingId, using default: 0")
-			"0"
-		}
-		
-		Log.d("SearchActivity", "Current building ID: $currentBuildingId (${BuildingConfig.BUILDINGS[currentBuildingId.toInt()]})")
 		setOnClickListeners()
 	}
 
@@ -56,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
 				if (roomManager.isRoomExists(searchText, currentBuildingId)) {
 					val intent = Intent(this, RoutesActivity::class.java).apply {
 						putExtra(SEARCH_TEXT, searchText)
-						putExtra(BUILDING_ID, currentBuildingId)
+						putExtra(EXTRA_BUILDING_ID, currentBuildingId)
 					}
 					startActivity(intent)
 				} else {
@@ -67,7 +58,9 @@ class SearchActivity : AppCompatActivity() {
 			}
 		}
 		mapButton.setOnClickListener {
-			val intent = Intent(this, CampusActivity::class.java)
+			val intent = Intent(this, CampusActivity::class.java).apply {
+				putExtra(EXTRA_BUILDING_ID, currentBuildingId)
+			}
 			startActivity(intent)
 		}
 	}

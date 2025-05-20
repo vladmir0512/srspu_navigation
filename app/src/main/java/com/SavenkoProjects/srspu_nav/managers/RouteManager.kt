@@ -114,7 +114,6 @@ class RouteManager(
 			val floorCanvas = Canvas(floorBitmap)
 
 			if (!floor.doors.containsKey(endRoomId)) {
-				Toast.makeText(context, "Маршрут не найден", Toast.LENGTH_SHORT).show()
 				Log.e(ROUTE_MANAGER, "Аудитория $endRoomId отсутствует на этаже ${floor.id}")
 				return
 			}
@@ -122,7 +121,6 @@ class RouteManager(
 			// Строим путь от лестницы до целевой аудитории
 			val pathIds = pathFinder.findPath(floor, staircase, endRoomId)
 			if (pathIds.isEmpty()) {
-				Toast.makeText(context, "Маршрут не найден", Toast.LENGTH_SHORT).show()
 				Log.e(
 					ROUTE_MANAGER,
 					"Путь не найден на этаже ${floor.id} от $staircase до $endRoomId"
@@ -136,7 +134,6 @@ class RouteManager(
 				pathDrawer.drawPath(floorCanvas, pathPoints)
 				binding.floorMapImageView.setImageBitmap(floorBitmap)
 			} else {
-				Toast.makeText(context, NOT_FOUND_ROUTE, Toast.LENGTH_SHORT).show()
 				Log.e(ROUTE_MANAGER, NOT_AVAILABLE_DRAW_PATH + floor.id)
 			}
 		} catch (e: IOException) {

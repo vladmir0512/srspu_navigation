@@ -33,13 +33,13 @@ class MapManager(
 					binding.floorMapImageView.layoutParams = paramsMainImageView
 				}
 			}
-			1 -> {
+			1,2 -> {
 				binding.floorMapImageView.setPadding(0, 380, 0, 10)
 				binding.mapImageView.setPadding(0, 380, 0, 10)
 				binding.floorMapImageView.scaleType = ImageView.ScaleType.CENTER_CROP
 				binding.mapImageView.scaleType = ImageView.ScaleType.CENTER_CROP
 			}
-			2, 3, 5, 6, 7 -> {
+			3, 5, 6, 7 -> {
 				binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
 				binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
 			}

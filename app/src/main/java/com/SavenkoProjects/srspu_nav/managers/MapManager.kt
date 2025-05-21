@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
+import com.SavenkoProjects.srspu_nav.R
 import com.SavenkoProjects.srspu_nav.data.Building
 import com.SavenkoProjects.srspu_nav.data.BuildingConfig
 import com.SavenkoProjects.srspu_nav.data.Constants.INCORRECT_BUILDING_NUMBER
@@ -38,8 +39,9 @@ class MapManager(
 				binding.mapImageView.setPadding(0, 380, 0, 10)
 				binding.floorMapImageView.scaleType = ImageView.ScaleType.CENTER_CROP
 				binding.mapImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+				binding.illustrationRoutes.setImageResource(R.drawable.college_class_bro_gl)
 			}
-			3, 5, 6, 7 -> {
+			3, 5, 7 -> {
 				binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
 				binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
 			}
@@ -49,8 +51,14 @@ class MapManager(
 				binding.mapImageView.setPadding(0, 10, 0, 10)
 				binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
 				binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
-			}
+				binding.illustrationRoutes.setImageResource(R.drawable.college_class_bro_nrg)
 
+			}
+			6 -> {
+				binding.floorMapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+				binding.mapImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+				binding.illustrationRoutes.setImageResource(R.drawable.college_class_bro_gg)
+			}
 			else -> {
 				Toast.makeText(
 					context, "Неверный номер здания",

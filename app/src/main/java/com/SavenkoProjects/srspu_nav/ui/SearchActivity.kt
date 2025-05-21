@@ -8,7 +8,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.SavenkoProjects.srspu_nav.data.BuildingConfig
+import com.SavenkoProjects.srspu_nav.R
 import com.SavenkoProjects.srspu_nav.data.Constants.INPUT_CORRECT_ROOM_NUMBER
 import com.SavenkoProjects.srspu_nav.data.Constants.SEARCH_TEXT
 import com.SavenkoProjects.srspu_nav.data.RoomManager
@@ -33,6 +33,18 @@ class SearchActivity : AppCompatActivity() {
 		
 		// Получаем buildingId из Intent
 		currentBuildingId = intent.getStringExtra(EXTRA_BUILDING_ID) ?: "6"
+		when (currentBuildingId) {
+			"1","2" -> {
+				binding.backgroundImage.setImageResource(R.drawable.gl_back)
+			}
+			"4" -> {
+				binding.backgroundImage.setImageResource(R.drawable.nrg_back)
+			}
+			"6" -> {
+				binding.backgroundImage.setImageResource(R.drawable.gg_back)
+			}
+
+		}
 		Log.d("SearchActivity", "Received building ID: $currentBuildingId")
 		
 		setupAutoComplete()
